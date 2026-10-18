@@ -226,3 +226,20 @@ body:not(.is-locked) .lock { display: none; }
 .lock__input:focus { outline: none; border-bottom-color: var(--gold-light); }
 .lock.is-wrong { animation: shake .4s; }
 @keyframes shake { 20%, 60% { translate: calc(-50% - 8px) 0; } 40%, 80% { translate: calc(-50% + 8px) 0; } }
+.lock__finger {
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  margin-left: -.9rem;
+  padding: .35rem;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, var(--leather-light), var(--leather-dark));
+  color: var(--gold-light);
+  cursor: pointer;
+  animation: aura-finger 3s ease-in-out infinite;
+}
+.lock__finger svg { width: 100%; height: 100%; }
+@keyframes aura-finger { 50% { box-shadow: 0 0 14px var(--mote); } }
+body.is-locked .clasp { cursor: pointer; }

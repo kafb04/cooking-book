@@ -133,11 +133,50 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft') turn(-1);
 });
 
-let touch = null;
-el.addEventListener('pointerdown', e => { if (e.pointerType === 'touch') touch = [e.clientX, e.clientY]; });
-el.addEventListener('pointerup', e => {
-  if (!touch) return;
-  const dx = e.clientX - touch[0], dy = e.clientY - touch[1];
-  touch = null;
-  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) turn(dx < 0 ? 1 : -1);
+// Arrastar pro lado: a folha acompanha o dedo/mouse/caneta e vira se passar de 1/3 do caminho
+let drag = null;
+let swallowClick = false;
+
+el.addEventListener('pointerdown', e => {
+  if (locked() || e.button > 0 || e.target.closest('a, button')) return;
+  drag = { x: e.clientX, y: e.clientY, id: e.pointerId, leaf: null, dir: 0, progress: 0 };
 });
+
+el.addEventListener('pointermove', e => {
+  if (!drag || e.pointerId !== drag.id) return;
+  const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+  if (!drag.leaf) { // decide se é arrasto lateral (e não rolagem da página)
+    if (Math.abs(dx) < 12 || Math.abs(dx) < Math.abs(dy)) {
+      if (Math.abs(dy) > 12) drag = null;
+      return;
+    }
+    drag.dir = dx < 0 ? 1 : -1;
+    const i = drag.dir > 0 ? turned : turned - 1;
+    if (i < 0 || (drag.dir > 0 && turned >= maxTurned())) { drag = null; return; }
+    drag.leaf = leaves[i];
+    drag.leaf.classList.remove('is-far');
+    drag.leaf.classList.add('is-turning');
+    drag.leaf.style.transition = 'none';
+    drag.leaf.style.zIndex = 3 * leaves.length;
+    el.setPointerCapture(e.pointerId);
+  }
+  const width = el.clientWidth / (spread ? 2 : 1);
+  drag.progress = Math.min(1, Math.max(0, -drag.dir * dx / width));
+  const angle = drag.dir > 0 ? -180 * drag.progress : -180 * (1 - drag.progress);
+  drag.leaf.style.transform = `rotateY(${angle}deg)`;
+});
+
+function endDrag(e) {
+  if (!drag || e.pointerId !== drag.id) return;
+  const { leaf, progress, dir } = drag;
+  drag = null;
+  if (!leaf) return;
+  swallowClick = true; // soltar depois de arrastar não conta como clique na capa/sumário
+  setTimeout(() => { swallowClick = false; });
+  leaf.style.transition = leaf.style.transform = ''; // a transição do CSS continua do ângulo atual
+  show(progress > 1 / 3 ? turned + dir : turned);
+}
+el.addEventListener('pointerup', endDrag);
+el.addEventListener('pointercancel', endDrag);
+el.addEventListener('click', e => { if (swallowClick) { e.preventDefault(); e.stopPropagation(); } }, true);
+el.addEventListener('dragstart', e => e.preventDefault()); // fotos não viram "arrastar imagem"

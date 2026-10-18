@@ -15,6 +15,8 @@
   aspect-ratio: 1.44;
   perspective: 2600px;
   touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
   transition: transform calc(var(--flip-ms) * 1ms) ease;
   /* Pilhas de folhas: a da direita afina e a da esquerda engrossa conforme lê (--done vem do book.js) */
   --stack: 22px;

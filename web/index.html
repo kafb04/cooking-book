@@ -39,6 +39,9 @@
       <feDropShadow in="SourceGraphic" dx="0" dy="1.6" stdDeviation="1.1" flood-opacity=".65" result="sh"/>
       <feComposite in="hl" in2="sh" operator="arithmetic" k2=".5" k3="1"/>
     </filter>
+    <symbol id="i-fingerprint" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <path d="M6.5 6.2A8 8 0 0 1 19.6 10M4.4 9.6A8 8 0 0 0 4 12v2M20 13.5v.5"/><path d="M8 18.5A6 6 0 0 1 7 15v-3a5 5 0 0 1 10 0v1.5"/>
+      <path d="M10 20.5a9 9 0 0 1-.9-3.5V12a2.9 2.9 0 0 1 5.8 0v2.5a9 9 0 0 0 .9 3.7M12 12v4.5a7 7 0 0 0 1.4 4"/><path d="M17 17.2a10 10 0 0 0 .5 2.3"/></g></symbol>
     <!-- Cadeado de latão (a argola abre ao destrancar) -->
     <symbol id="art-padlock" viewBox="0 0 60 84">
       <path class="padlock__shackle" d="M17 40V25a13 13 0 0 1 26 0v15"/>
@@ -87,7 +90,6 @@
     <h1 class="hud__logo">Livro de Receitas</h1>
     <nav class="hud__actions">
       <button class="btn" type="button" data-action="new">Nova receita</button>
-      <label class="btn btn--quiet">Importar .docx<input type="file" id="import" accept=".docx" multiple hidden></label>
       <button class="btn btn--quiet" type="button" data-action="install">Instalar app</button>
       <button class="btn btn--quiet" type="button" data-action="lock">Trancar</button>
     </nav>
@@ -130,11 +132,26 @@
 
   <!-- Plaquinha da senha (só aparece com o livro trancado) -->
   <form class="lock" id="lock" autocomplete="on">
+    <button class="lock__finger" type="button" hidden aria-label="Abrir com a digital"><svg viewBox="0 0 24 24"><use href="#i-fingerprint"/></svg></button>
     <label class="lock__label" for="lock-password">Senha</label>
     <input class="lock__input" id="lock-password" name="password" type="password" inputmode="numeric"
            autocomplete="current-password" minlength="4" maxlength="128" required placeholder="••••">
     <button class="btn btn--small" type="submit">Abrir</button>
   </form>
+
+  <dialog class="sheet sheet--small" id="enroll">
+    <form class="sheet__form" method="dialog">
+      <header class="sheet__bar"><h2 class="sheet__title">Abrir com a digital?</h2></header>
+      <div class="sheet__body help">
+        <svg class="help__finger" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-fingerprint"/></svg>
+        <p>Neste celular, o livro pode abrir só encostando o dedo no leitor. A senha continua valendo.</p>
+      </div>
+      <footer class="sheet__foot">
+        <button class="btn btn--paper" value="no">Agora não</button>
+        <button class="btn" value="yes">Ativar digital</button>
+      </footer>
+    </form>
+  </dialog>
 
   <dialog class="sheet sheet--small" id="install-help">
     <form class="sheet__form" method="dialog">
@@ -143,10 +160,9 @@
         <button class="link-btn sheet__close" aria-label="Fechar">✕</button>
       </header>
       <div class="sheet__body help">
-        <p><b>Android (Chrome):</b> menu <b>⋮</b> → <b>Adicionar à tela inicial</b> (ou <b>Instalar app</b>).</p>
+        <p>Abra o livro pelo endereço <b>https://…ts.net</b> do Tailscale (não pelo IP de casa).</p>
+        <p><b>Android (Chrome):</b> o botão já abre a instalação; se não abrir, menu <b>⋮</b> → <b>Instalar app</b>.</p>
         <p><b>iPhone (Safari):</b> botão <b>Compartilhar</b> → <b>Adicionar à Tela de Início</b>.</p>
-        <p class="help__note">O ícone do livro aparece na tela do celular. Pela rede de casa ele abre como atalho;
-          o app completo (tela cheia e digital) precisa de um endereço HTTPS.</p>
       </div>
     </form>
   </dialog>

@@ -1,4 +1,4 @@
-// Boot: carrega as receitas, monta o livro e liga editor e importação.
+// Boot: cadeado, receitas, livro, editor e instalação como app.
 import * as api from './api.js';
 import * as book from './book.js';
 import { initEditor, openEditor } from './editor.js';
@@ -27,27 +27,20 @@ document.addEventListener('click', e => {
   if (e.target.closest('[data-action="install"]')) install();
 });
 
-document.getElementById('import').addEventListener('change', async e => {
-  const files = [...e.target.files];
-  e.target.value = '';
-  if (!files.length) return;
-  api.toast('Lendo as receitas...');
-  try {
-    const { created, failed } = await api.importDocx(files);
-    api.toast(`${created.length} receita(s) importada(s)${failed.length ? ` · não li: ${failed.join(', ')}` : ''}`);
-    await refresh(created[0]?.id);
-    if (created.length === 1) openEditor(recipes.find(r => r.id === created[0].id), categories());
-  } catch (err) {
-    api.toast(err.message);
-  }
-});
-
-// Instalar como app: usa o convite do navegador quando existe; senão mostra o passo a passo
+// Instalar como app: com HTTPS o Chrome entrega o convite e o botão abre a instalação na hora;
+// sem ele (ou no iPhone, que não tem convite) o botão mostra o passo a passo
+const installBtn = document.querySelector('[data-action="install"]');
 let installPrompt = null;
+if ('serviceWorker' in navigator && isSecureContext) navigator.serviceWorker.register('/sw.js');
 addEventListener('beforeinstallprompt', e => { e.preventDefault(); installPrompt = e; });
-if (matchMedia('(display-mode: standalone)').matches) document.querySelector('[data-action="install"]').hidden = true;
-function install() {
-  if (installPrompt) { installPrompt.prompt(); installPrompt = null; } else document.getElementById('install-help').showModal();
+addEventListener('appinstalled', () => { installBtn.hidden = true; api.toast('Livro instalado na tela inicial'); });
+if (matchMedia('(display-mode: standalone)').matches) installBtn.hidden = true;
+async function install() {
+  if (!installPrompt) return document.getElementById('install-help').showModal();
+  installPrompt.prompt();
+  const { outcome } = await installPrompt.userChoice;
+  installPrompt = null;
+  if (outcome === 'accepted') installBtn.hidden = true;
 }
 
 book.render([]); // capa trancada enquanto espera a senha

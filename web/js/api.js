@@ -29,7 +29,6 @@ export const update = (id, fields) => call('PUT', `/api/recipes/${id}`, fields);
 export const remove = id => call('DELETE', `/api/recipes/${id}`);
 export const putMedia = (id, field, blob) => call('POST', `/api/recipes/${id}/media/${field}`, form('file', [[blob, field]]));
 export const dropMedia = (id, field) => call('DELETE', `/api/recipes/${id}/media/${field}`);
-export const importDocx = files => call('POST', '/api/import', form('files', [...files].map(f => [f, f.name])));
 
 let timer;
 export function toast(msg) {

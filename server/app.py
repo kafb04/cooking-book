@@ -9,7 +9,6 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 import auth
-import docx_import
 import store
 
 WEB = Path(__file__).resolve().parent.parent / "web"
@@ -57,21 +56,29 @@ class UnlockIn(BaseModel):
 
 
 app = FastAPI(title="Livro de Receitas")
-OPEN_PATHS = {"/api/session", "/api/unlock"}
+OPEN_PATHS = {"/api/session", "/api/unlock", "/api/passkey/login/options", "/api/passkey/login"}
 
 
 @app.middleware("http")
 async def require_unlocked(request: Request, call_next):
     """Receitas e fotos só saem do servidor com o livro destrancado."""
     path = request.url.path
-    if path.startswith(("/api/", "/media/")) and path not in OPEN_PATHS             and not auth.is_valid(request.cookies.get(auth.COOKIE)):
+    locked = not auth.is_valid(request.cookies.get(auth.COOKIE))
+    if locked and path.startswith(("/api/", "/media/")) and path not in OPEN_PATHS:
         return JSONResponse({"detail": "Livro trancado"}, status_code=401)
     return await call_next(request)
 
 
+def _site(request):
+    """(rp_id, origens aceitas) da digital: o endereço pelo qual o livro foi aberto."""
+    host = request.headers.get("x-forwarded-host") or request.headers.get("host", "")
+    return host.split(":")[0], [f"https://{host}", f"http://{host}"]
+
+
 @app.get("/api/session")
 def session(request: Request):
-    return {"unlocked": auth.is_valid(request.cookies.get(auth.COOKIE)), "setup": not auth.has_password()}
+    return {"unlocked": auth.is_valid(request.cookies.get(auth.COOKIE)), "setup": not auth.has_password(),
+            "passkeys": bool(auth.passkeys(_site(request)[0]))}
 
 
 @app.post("/api/unlock")
@@ -85,6 +92,40 @@ def unlock(body: UnlockIn, response: Response):
     if not token:
         raise HTTPException(401, "Senha errada")
     # cookie de sessão (sem validade): fechar o navegador tranca de novo
+    response.set_cookie(auth.COOKIE, token, httponly=True, samesite="strict")
+    return {"unlocked": True}
+
+
+class PasskeyIn(BaseModel):
+    credential: dict
+    name: str = Field("celular", max_length=60)
+
+
+@app.post("/api/passkey/register/options")
+def passkey_register_options(request: Request):  # só com o livro destrancado (middleware)
+    return Response(auth.register_options(_site(request)[0]), media_type="application/json")
+
+
+@app.post("/api/passkey/register")
+def passkey_register(body: PasskeyIn, request: Request):
+    try:
+        auth.register(body.credential, *_site(request), body.name)
+    except Exception as e:  # a lib levanta tipos diferentes pra cada falha de verificação
+        raise HTTPException(400, f"Não deu pra ativar a digital: {e}")
+    return {"ok": True}
+
+
+@app.post("/api/passkey/login/options")
+def passkey_login_options(request: Request):
+    return Response(auth.login_options(_site(request)[0]), media_type="application/json")
+
+
+@app.post("/api/passkey/login")
+def passkey_login(body: PasskeyIn, request: Request, response: Response):
+    try:
+        token = auth.login(body.credential, *_site(request))
+    except Exception:
+        raise HTTPException(401, "Digital não reconhecida")
     response.set_cookie(auth.COOKIE, token, httponly=True, samesite="strict")
     return {"unlocked": True}
 
@@ -128,26 +169,6 @@ async def upload_media(rid: str, field: MediaField, file: UploadFile):
 @app.delete("/api/recipes/{rid}/media/{field}")
 def delete_media(rid: str, field: MediaField):
     return _or_404(store.set_media, rid, field)
-
-
-@app.post("/api/import")
-async def import_docx(files: list[UploadFile]):
-    created, failed = [], []
-    for f in files:
-        data = await _read(f)
-        try:
-            if not data.startswith(b"PK"):
-                raise ValueError("não é .docx")
-            fields, img = docx_import.parse(data, f.filename or "receita.docx")
-        except Exception:  # docx corrompido não pode derrubar a importação dos outros
-            failed.append(f.filename)
-            continue
-        row = store.save(fields)
-        ext = img and _image_ext(img)
-        if ext:
-            row = store.set_media(row["id"], "photo", img, ext)
-        created.append(row)
-    return {"created": created, "failed": failed}
 
 
 class AlwaysRevalidate(StaticFiles):

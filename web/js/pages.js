@@ -19,7 +19,7 @@ export function toc(entries) {
   if (!entries.length) {
     const li = document.createElement('li');
     li.className = 'toc__empty';
-    li.textContent = 'Nenhuma receita ainda. Use “Nova receita” ou importe seus .docx.';
+    li.textContent = 'Nenhuma receita ainda. Use “Nova receita” pra começar.';
     list.append(li);
   }
   for (const e of entries) {
