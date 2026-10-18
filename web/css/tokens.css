@@ -1,0 +1,39 @@
+/* Paleta e medidas centrais: TODA cor do app sai daqui. */
+:root {
+  --bubblegum: #ff5fae;
+  --barbie: #e0218a;
+  --barbie-deep: #a8125f;
+  --baby: #ffd6ea;
+  --blush: #ffeaf4;
+  --lilac: #c8a2ff;
+  --lilac-deep: #8f5fe0;
+  --lilac-soft: #efe4ff;
+  --paper: #fff7fa;
+  --paper-edge: #f1d3e1;
+  --rule: #f6bcd6;
+  --margin-line: #ff8fb1;
+  --ink: #7a1f4b;
+  --ink-soft: #b06a8d;
+  --rose-gold: #e8b4a0;
+  --rose-gold-light: #fde6da;
+  --white: #fff;
+
+  --shadow: color-mix(in srgb, var(--ink) 30%, transparent);
+  --shadow-soft: color-mix(in srgb, var(--ink) 14%, transparent);
+  --spine: color-mix(in srgb, var(--ink) 22%, transparent);
+  --gloss: color-mix(in srgb, var(--white) 55%, transparent);
+  --tape: color-mix(in srgb, var(--lilac) 55%, transparent);
+
+  --font-title: "Pacifico", "Brush Script MT", cursive;
+  --font-hand: "Caveat", "Segoe Print", cursive;
+  --font-ui: "Fredoka", "Trebuchet MS", system-ui, sans-serif;
+
+  --line: 1.5em;      /* altura da pauta = altura da linha do texto */
+  --radius: 18px;
+  --flip-ms: 850;     /* duração da virada (ms) — o JS lê este valor */
+  --gutter: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --flip-ms: 1; }
+}

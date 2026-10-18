@@ -1,0 +1,9 @@
+{
+  "name": "Livro de Receitas",
+  "short_name": "Receitinhas",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffeaf4",
+  "theme_color": "#e0218a",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

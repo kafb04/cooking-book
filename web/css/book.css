@@ -1,0 +1,274 @@
+/* O livro: palco, folhas que viram em 3D, base de toda página, capa, guardas e sumário. */
+.stage {
+  flex: 1;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(.75rem, 2vw, 2rem);
+  padding: .5rem var(--gutter) 1.5rem;
+}
+
+.book {
+  position: relative;
+  height: min(82dvh, calc((100vw - 14rem) / 1.44));
+  aspect-ratio: 1.44;
+  perspective: 2600px;
+  touch-action: pan-y;
+  transition: transform calc(var(--flip-ms) * 1ms) ease;
+}
+.book.is-closed-front { transform: translateX(-25%); }
+.book.is-closed-back { transform: translateX(25%); }
+
+.leaf {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  transition: transform calc(var(--flip-ms) * 1ms) cubic-bezier(.45, .05, .3, 1);
+}
+.leaf.is-turned { transform: rotateY(-180deg); }
+.book.is-instant, .book.is-instant .leaf { transition: none; }
+.leaf.is-far { display: none; }
+
+.leaf__face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  container-type: size;
+}
+.leaf__face--back { transform: rotateY(180deg); }
+.leaf__face::after { /* sombra que passa pela folha enquanto vira */
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity calc(var(--flip-ms) * .5ms);
+  background: linear-gradient(to right, var(--shadow), transparent 45%);
+}
+.leaf__face--back::after { background: linear-gradient(to left, var(--shadow), transparent 45%); }
+.leaf.is-turning .leaf__face::after { opacity: 1; }
+
+/* ---------- Base de toda página ---------- */
+.page {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .6em;
+  padding: 7cqw 7cqw 9cqw;
+  overflow: hidden;
+  background: var(--paper);
+  color: var(--ink);
+  font: clamp(1.1rem, 4.6cqw, 1.7rem)/1.25 var(--font-hand);
+  border-radius: 4px 16px 16px 4px;
+  box-shadow:
+    inset 26px 0 26px -22px var(--spine),
+    2px 0 0 var(--paper-edge), 4px 1px 0 var(--paper), 5px 2px 0 var(--paper-edge),
+    0 14px 30px var(--shadow);
+}
+.leaf__face--back .page {
+  border-radius: 16px 4px 4px 16px;
+  box-shadow:
+    inset -26px 0 26px -22px var(--spine),
+    -2px 0 0 var(--paper-edge), -4px 1px 0 var(--paper), -5px 2px 0 var(--paper-edge),
+    0 14px 30px var(--shadow);
+}
+.page__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--bubblegum) transparent;
+}
+.page__num {
+  position: absolute;
+  bottom: 3.2cqw;
+  right: 6cqw;
+  font: 600 .8rem var(--font-ui);
+  color: var(--ink-soft);
+}
+.page__num::before, .page__num::after { content: " ♥ "; color: var(--rule); }
+.leaf__face--back .page__num { right: auto; left: 6cqw; }
+
+/* Pauta de caderno: linhas acompanham o texto mesmo rolando */
+.lined {
+  line-height: var(--line);
+  background-image:
+    linear-gradient(90deg, transparent 1.6em, var(--margin-line) 1.6em calc(1.6em + 2px), transparent 0),
+    linear-gradient(transparent calc(100% - 1px), var(--rule) 0);
+  background-size: 100% 100%, 100% var(--line);
+  background-attachment: local;
+  padding-left: 2.1em;
+}
+
+/* Faixa de título (sumário, anotações) */
+.banner {
+  position: relative;
+  align-self: center;
+  margin: 0 0 .3em;
+  padding: .05em 1.4em .2em;
+  font: clamp(1.3rem, 7cqw, 2.4rem)/1.5 var(--font-title);
+  color: var(--white);
+  background: linear-gradient(var(--bubblegum), var(--barbie));
+  border-radius: 6px;
+  text-shadow: 0 2px 0 var(--barbie-deep);
+  box-shadow: 0 4px 0 var(--barbie-deep);
+  clip-path: polygon(0 0, 100% 0, 96% 50%, 100% 100%, 0 100%, 4% 50%);
+}
+.banner--soft { background: linear-gradient(var(--lilac), var(--lilac-deep)); box-shadow: none; text-shadow: none; }
+
+/* ---------- Capa e contracapa de veludo matelassê ---------- */
+.velvet {
+  background:
+    repeating-linear-gradient(45deg, transparent 0 9cqw, var(--gloss) 9cqw calc(9cqw + 1.5px)),
+    repeating-linear-gradient(-45deg, transparent 0 9cqw, var(--gloss) 9cqw calc(9cqw + 1.5px)),
+    radial-gradient(ellipse at 30% 18%, var(--bubblegum), var(--barbie) 55%, var(--barbie-deep));
+  background-blend-mode: soft-light, soft-light, normal;
+  color: var(--white);
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 3cqw color-mix(in srgb, var(--barbie-deep) 35%, transparent), 0 16px 34px var(--shadow);
+}
+.velvet::before { /* costura */
+  content: "";
+  position: absolute;
+  inset: 4.5cqw;
+  border: 3px dashed var(--rose-gold-light);
+  border-radius: 14px;
+  opacity: .85;
+  pointer-events: none;
+}
+.cover__content { text-align: center; position: relative; }
+.cover__emblem {
+  width: 30cqw;
+  height: 30cqw;
+  fill: var(--rose-gold);
+  stroke: var(--rose-gold-light);
+  stroke-width: 1.2px;
+  filter: drop-shadow(0 4px 0 var(--barbie-deep)) drop-shadow(0 10px 14px var(--shadow));
+  animation: heartbeat 2.4s ease-in-out infinite;
+}
+.cover__emblem--small { width: 20cqw; height: 20cqw; }
+.cover__pre { margin: .4em 0 0; font: 600 clamp(1rem, 5.5cqw, 1.8rem) var(--font-ui); letter-spacing: .12em; text-transform: uppercase; color: var(--rose-gold-light); }
+.cover__title {
+  margin: 0;
+  padding: 0 .2em .15em;
+  font: clamp(2.4rem, 17cqw, 6rem)/1.35 var(--font-title);
+  background: linear-gradient(var(--rose-gold-light) 25%, var(--rose-gold) 60%, var(--rose-gold-light) 85%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 3px 0 var(--barbie-deep)) drop-shadow(0 8px 10px var(--shadow));
+}
+.cover__sub { margin: .3em 0 0; font-size: clamp(1.1rem, 6cqw, 2rem); color: var(--blush); }
+
+.clasp { /* fecho de diário */
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 15cqw;
+  height: 11cqw;
+  translate: 0 -50%;
+  border-radius: 8px 0 0 8px;
+  background: linear-gradient(var(--rose-gold-light), var(--rose-gold));
+  box-shadow: 0 3px 0 var(--barbie-deep), 0 6px 10px var(--shadow);
+  display: grid;
+  place-items: center;
+}
+.clasp svg { width: 6cqw; height: 6cqw; fill: var(--barbie); }
+
+.sparkle {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: 6cqw;
+  height: 6cqw;
+  fill: var(--rose-gold-light);
+  animation: twinkle 2.4s var(--d) ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: .2; transform: scale(.5) rotate(0); }
+  50% { opacity: 1; transform: scale(1) rotate(45deg); }
+}
+@keyframes heartbeat {
+  0%, 60%, 100% { transform: scale(1); }
+  20% { transform: scale(1.07); }
+  40% { transform: scale(.97); }
+}
+
+/* ---------- Guardas (parte de dentro da capa) ---------- */
+.page--endpaper {
+  justify-content: center;
+  align-items: center;
+  background-color: var(--baby);
+  background-image:
+    radial-gradient(circle, var(--white) 18%, transparent 20%),
+    radial-gradient(circle, color-mix(in srgb, var(--bubblegum) 35%, transparent) 18%, transparent 20%);
+  background-size: 8cqw 8cqw;
+  background-position: 0 0, 4cqw 4cqw;
+}
+.endpaper__card {
+  width: 78%;
+  padding: 1.2em 1.4em 1.6em;
+  border: 3px dashed var(--bubblegum);
+  border-radius: var(--radius);
+  background: var(--paper);
+  box-shadow: 0 6px 0 var(--rule), 0 12px 20px var(--shadow-soft);
+  text-align: center;
+  rotate: -2deg;
+}
+.endpaper__text { margin: 0 0 .8em; font-size: 1.25em; }
+.endpaper__line { display: block; border-bottom: 2px dotted var(--ink-soft); height: 1.2em; }
+
+/* ---------- Sumário ---------- */
+.toc { list-style: none; margin: 0; padding: 0 .2em; }
+.toc__item {
+  display: flex;
+  align-items: baseline;
+  gap: .35em;
+  padding: .15em .3em;
+  border-radius: 8px;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background .15s, transform .15s;
+}
+.toc__item:hover, .toc__item:focus-visible { background: var(--baby); transform: translateX(4px); outline: none; }
+.toc__name { font-weight: 700; }
+.toc__tag { font: 600 .55em var(--font-ui); color: var(--lilac-deep); text-transform: uppercase; letter-spacing: .06em; }
+.toc__tag:empty { display: none; }
+.toc__dots { flex: 1; border-bottom: 3px dotted var(--rule); min-width: 1em; }
+.toc__num { font: 600 .75em var(--font-ui); color: var(--barbie); }
+.toc__empty { text-align: center; margin-top: 2em; color: var(--ink-soft); }
+
+.page--notes .lined { color: var(--ink-soft); }
+
+/* ---------- Celular: uma página por vez ---------- */
+@media (max-width: 767px) {
+  .stage {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "book book" "prev next";
+    justify-items: center;
+    padding-top: 0;
+  }
+  .book {
+    grid-area: book;
+    height: min(calc(100dvh - 11.5rem), calc((100vw - 2 * var(--gutter)) / .72));
+    aspect-ratio: .72;
+    overflow: clip;
+  }
+  .book.is-closed-front, .book.is-closed-back { transform: none; }
+  .leaf { left: 0; width: 100%; }
+  .arrow { width: 3.6rem; height: 3.6rem; font-size: 1.7rem; }
+  .arrow--prev { grid-area: prev; justify-self: end; margin-right: 1rem; }
+  .arrow--next { grid-area: next; justify-self: start; margin-left: 1rem; }
+  .hud__logo { font-size: 1.2rem; }
+  .hud .btn { font-size: .85rem; padding: .45em .9em; }
+}

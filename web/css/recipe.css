@@ -1,0 +1,104 @@
+/* Layout padrão da receita: cabeçalho, polaroid, seções, post-it e fitinha marcadora. */
+.recipe__head { position: relative; padding-right: 2.6rem; }
+.recipe__tag {
+  display: inline-block;
+  padding: .1em .8em;
+  border-radius: 999px;
+  background: var(--lilac-soft);
+  color: var(--lilac-deep);
+  font: 600 .55em var(--font-ui);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.recipe__tag:empty { display: none; }
+.recipe__title {
+  margin: .1em 0 0;
+  font: clamp(1.4rem, 8cqw, 2.6rem)/1.3 var(--font-title);
+  color: var(--barbie);
+  text-decoration: underline wavy var(--rule);
+  text-decoration-thickness: 2px;
+  text-underline-offset: .3em;
+  overflow-wrap: anywhere;
+}
+.btn-round--sticker { position: absolute; top: 0; right: 0; rotate: 8deg; }
+
+.ribbon {
+  position: absolute;
+  top: 0;
+  right: 30cqw;
+  width: 6cqw;
+  height: 7cqw;
+  background: linear-gradient(90deg, var(--barbie), var(--bubblegum) 50%, var(--barbie));
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
+  transition: height .2s;
+}
+.ribbon:hover, .ribbon:focus-visible { height: 10cqw; outline: none; }
+
+/* ---------- Polaroid com fita ---------- */
+.polaroid {
+  position: relative;
+  flex: none;
+  align-self: center;
+  height: 38%;
+  aspect-ratio: 1.1;
+  margin: .3em 0 .2em;
+  padding: 3.5cqw 3.5cqw 9cqw;
+  background: var(--white);
+  box-shadow: 0 6px 16px var(--shadow-soft), 0 1px 3px var(--shadow-soft);
+  rotate: -2.5deg;
+  cursor: pointer;
+}
+.polaroid::before {
+  content: "";
+  position: absolute;
+  top: -3.5cqw;
+  left: 30%;
+  width: 40%;
+  height: 7cqw;
+  background: var(--tape);
+  rotate: -4deg;
+}
+.polaroid img { width: 100%; height: 100%; object-fit: cover; }
+.polaroid__empty {
+  display: none;
+  height: 100%;
+  place-items: center;
+  border: 3px dashed var(--rule);
+  border-radius: 6px;
+  color: var(--ink-soft);
+  text-align: center;
+}
+.polaroid.is-empty img { display: none; }
+.polaroid.is-empty .polaroid__empty { display: grid; }
+
+/* ---------- Seções ---------- */
+.recipe__section { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.recipe__label {
+  margin: 0 0 .1em;
+  font: clamp(1.05rem, 5.6cqw, 1.8rem)/1.4 var(--font-title);
+  color: var(--bubblegum);
+}
+.recipe__list { list-style: none; margin: 0; padding: 0; }
+.recipe__list li::before { content: "♥ "; color: var(--bubblegum); font-size: .8em; }
+.recipe__list li.is-sub { font-weight: 700; color: var(--barbie); }
+.recipe__list li.is-sub::before { content: "✿ "; }
+.recipe__steps p, .recipe__notes p { margin: 0; }
+.ink { width: 100%; }
+.ink:not([src]) { display: none; }
+
+/* ---------- Post-it de observações ---------- */
+.postit {
+  position: relative;
+  flex: none;
+  max-height: 40%;
+  display: flex;
+  flex-direction: column;
+  padding: .6em .9em .8em;
+  background: linear-gradient(var(--lilac-soft), color-mix(in srgb, var(--lilac-soft) 70%, var(--lilac)));
+  box-shadow: 0 8px 14px var(--shadow-soft);
+  rotate: 1.4deg;
+  clip-path: polygon(0 0, 100% 0, 100% 88%, 94% 100%, 0 100%);
+}
+.postit.is-empty { display: none; }
+.postit__label { margin: 0; font: clamp(.95rem, 5cqw, 1.5rem)/1.4 var(--font-title); color: var(--lilac-deep); }
+.postit__body { overflow-y: auto; min-height: 0; scrollbar-width: thin; scrollbar-color: var(--lilac) transparent; }

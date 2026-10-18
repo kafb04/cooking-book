@@ -1,0 +1,167 @@
+/* Reset, fundo de toalha xadrez, HUD e botões "gloss" de joguinho. */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  font-family: var(--font-ui);
+  color: var(--ink);
+  background-color: var(--blush);
+  background-image:
+    linear-gradient(90deg, color-mix(in srgb, var(--bubblegum) 16%, transparent) 50%, transparent 0),
+    linear-gradient(color-mix(in srgb, var(--bubblegum) 16%, transparent) 50%, transparent 0);
+  background-size: 44px 44px;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+button, input, textarea { font: inherit; color: inherit; }
+img { max-width: 100%; display: block; }
+.sprite { position: absolute; width: 0; height: 0; }
+.icon { width: 1em; height: 1em; fill: currentColor; vertical-align: -.12em; }
+[hidden] { display: none !important; }
+
+/* ---------- HUD ---------- */
+.hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  padding: .6rem max(var(--gutter), env(safe-area-inset-left));
+}
+.hud__logo {
+  margin: 0;
+  font: 1.6rem/1.3 var(--font-title);
+  color: var(--white);
+  -webkit-text-stroke: 6px var(--barbie);
+  paint-order: stroke fill;
+  filter: drop-shadow(0 3px 0 var(--barbie-deep));
+  white-space: nowrap;
+}
+.hud__logo .icon { color: var(--bubblegum); -webkit-text-stroke: 0; }
+.hud__actions { display: flex; gap: .6rem; flex-wrap: wrap; justify-content: flex-end; }
+
+/* ---------- Botão gloss (casual game 2010) ---------- */
+.btn {
+  --c1: var(--bubblegum);
+  --c2: var(--barbie);
+  --c3: var(--barbie-deep);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4em;
+  padding: .55em 1.25em;
+  border: 3px solid var(--white);
+  border-radius: 999px;
+  background: linear-gradient(var(--c1), var(--c2));
+  color: var(--white);
+  font-weight: 600;
+  letter-spacing: .02em;
+  text-shadow: 0 2px 0 var(--c3);
+  box-shadow: 0 5px 0 var(--c3), 0 9px 16px var(--shadow);
+  cursor: pointer;
+  user-select: none;
+  transition: transform .12s, box-shadow .12s, filter .12s;
+}
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 3px 12% 50%;
+  border-radius: 999px;
+  background: linear-gradient(var(--gloss), transparent);
+  pointer-events: none;
+}
+.btn:hover { filter: brightness(1.06) saturate(1.1); transform: translateY(-1px); }
+.btn:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--c3), 0 3px 8px var(--shadow); }
+.btn:focus-visible, .btn-round:focus-visible, .arrow:focus-visible { outline: 3px dashed var(--lilac-deep); outline-offset: 4px; }
+.btn:disabled { filter: grayscale(.6); cursor: progress; }
+.btn--lilac { --c1: var(--lilac); --c2: var(--lilac-deep); --c3: color-mix(in srgb, var(--lilac-deep) 70%, var(--ink)); }
+.btn--ghost { --c1: var(--white); --c2: var(--baby); --c3: var(--rule); color: var(--barbie); text-shadow: none; }
+.btn--small { font-size: .85rem; padding: .35em .95em; border-width: 2px; box-shadow: 0 3px 0 var(--c3), 0 5px 10px var(--shadow-soft); }
+
+.btn-round {
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  padding: 0;
+  border: 3px solid var(--white);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--bubblegum), var(--barbie));
+  color: var(--white);
+  font-weight: 700;
+  box-shadow: 0 3px 0 var(--barbie-deep), 0 5px 10px var(--shadow);
+  cursor: pointer;
+  transition: transform .15s;
+}
+.btn-round:hover { transform: rotate(-8deg) scale(1.08); }
+
+/* ---------- Setinhas fofas ---------- */
+.arrow {
+  position: relative;
+  width: 4.2rem;
+  height: 4.2rem;
+  flex: none;
+  border: 4px solid var(--white);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 28%, var(--bubblegum), var(--barbie) 70%);
+  color: var(--white);
+  font-size: 2rem;
+  box-shadow: 0 6px 0 var(--barbie-deep), 0 12px 22px var(--shadow);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: transform .15s, opacity .3s;
+}
+.arrow::before {
+  content: "";
+  position: absolute;
+  inset: 6% 18% 52%;
+  border-radius: 50%;
+  background: linear-gradient(var(--gloss), transparent);
+}
+.arrow--prev .icon { transform: scaleX(-1); }
+.arrow__heart {
+  position: absolute;
+  top: -.35rem;
+  right: -.35rem;
+  width: 1.4rem;
+  height: 1.4rem;
+  fill: var(--lilac);
+  stroke: var(--white);
+  stroke-width: 3px;
+  paint-order: stroke;
+  transition: transform .3s;
+}
+.arrow--prev .arrow__heart { right: auto; left: -.35rem; }
+.arrow:hover { animation: boing .5s; }
+.arrow:hover .arrow__heart { transform: scale(1.25) rotate(12deg); }
+.arrow:active { transform: translateY(5px); box-shadow: 0 1px 0 var(--barbie-deep), 0 4px 10px var(--shadow); }
+.arrow:disabled { opacity: .35; pointer-events: none; }
+
+@keyframes boing {
+  30% { transform: scale(1.15, .88); }
+  55% { transform: scale(.94, 1.08); }
+  75% { transform: scale(1.04, .97); }
+}
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(1.2rem + env(safe-area-inset-bottom));
+  z-index: 10;
+  max-width: calc(100vw - 2 * var(--gutter));
+  padding: .6rem 1.3rem;
+  border: 3px solid var(--white);
+  border-radius: 999px;
+  background: var(--lilac-deep);
+  color: var(--white);
+  font-weight: 600;
+  box-shadow: 0 5px 0 color-mix(in srgb, var(--lilac-deep) 60%, var(--ink)), 0 10px 20px var(--shadow);
+  transform: translate(-50%, 160%);
+  visibility: hidden;
+  transition: transform .35s cubic-bezier(.3, 1.6, .5, 1), visibility .35s;
+  pointer-events: none;
+}
+.toast.is-on { transform: translate(-50%, 0); visibility: visible; }
