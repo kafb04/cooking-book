@@ -11,7 +11,7 @@ python -m venv .venv
 .venv/Scripts/python -m uvicorn app:app --app-dir server --port 8000
 ```
 
-No PC: http://localhost:8000
+No PC: http://localhost:8000 — ou só dê dois cliques em **`iniciar.bat`** (deixe a janela aberta).
 
 ## Celular (Tailscale: HTTPS privado, funciona até fora de casa)
 
