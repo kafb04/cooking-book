@@ -4,7 +4,7 @@
   max-height: calc(100dvh - 2rem);
   padding: 0;
   border: 0;
-  border-radius: 2px;
+  border-radius: 28px 28px 18px 18px;
   background: var(--fibers), var(--paper);
   color: var(--ink);
   box-shadow: 0 30px 70px var(--shadow), 0 2px 4px var(--shadow-soft);
@@ -50,10 +50,10 @@
 .field--photo .field__label { grid-column: 1 / -1; }
 .field__actions { display: flex; flex-wrap: wrap; gap: .6rem; }
 .photo--mini { height: auto; width: 8rem; padding: .4rem; margin: .4rem; cursor: default; }
-.photo--mini::after { --k: 1.1rem; inset: -.3rem; }
+.photo--mini { outline-offset: -.3rem; }
 .photo--mini img { aspect-ratio: 1; }
 
-.section { margin: 0; padding: .7rem 1rem 1rem; border: 1px solid var(--rule); border-radius: 2px; display: grid; gap: .6rem; }
+.section { margin: 0; padding: .7rem 1rem 1rem; border: 1px solid var(--rule); border-radius: 16px; display: grid; gap: .6rem; }
 .section__label { padding: 0 .4em; font-size: 1.2rem; }
 .tabs { display: flex; gap: 1.2rem; border-bottom: 1px solid var(--rule); }
 .tab {
@@ -82,6 +82,7 @@
   width: 100%;
   height: auto;
   border: 1px solid var(--rule);
+  border-radius: 14px;
   touch-action: none;
   cursor: crosshair;
   background-color: var(--cream);
@@ -91,5 +92,5 @@
 .ink-pad__tools { display: flex; flex-wrap: wrap; gap: .5rem; }
 
 @media (max-width: 767px) {
-  .sheet { width: 100vw; max-width: none; max-height: 100dvh; margin-bottom: 0; }
+  .sheet { width: 100vw; max-width: none; max-height: 100dvh; margin-bottom: 0; border-radius: 24px 24px 0 0; }
 }

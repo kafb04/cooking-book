@@ -108,7 +108,8 @@ img { max-width: 100%; display: block; }
   content: "";
   position: absolute;
   z-index: -1;
-  clip-path: polygon(var(--tip) 0, calc(100% - var(--tip)) 0, 100% 50%, calc(100% - var(--tip)) 100%, var(--tip) 100%, 0 50%);
+  -webkit-mask: var(--leaf-shape) 0 0 / 100% 100% no-repeat;
+  mask: var(--leaf-shape) 0 0 / 100% 100% no-repeat;
 }
 .btn::before { inset: 0; background: var(--edge); }
 .btn::after {
@@ -178,7 +179,7 @@ img { max-width: 100%; display: block; }
   z-index: 10;
   max-width: calc(100vw - 2 * var(--gutter));
   padding: .55rem 1.3rem;
-  border-radius: 2px;
+  border-radius: 999px;
   background: var(--fibers), var(--paper);
   color: var(--ink);
   font: 600 1.05rem var(--font-ui);

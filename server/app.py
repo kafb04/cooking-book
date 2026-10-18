@@ -115,6 +115,21 @@ class AlwaysRevalidate(StaticFiles):
         return resp
 
 
+EXAMPLE = {
+    "title": "Bolo de Fubá da Vó",
+    "category": "Bolos",
+    "ingredients": "3 ovos\n2 xícaras de fubá\n1 e 1/2 xícara de açúcar\n1 xícara de leite\n1/2 xícara de óleo\n"
+                   "2 colheres (sopa) de farinha de trigo\n1 colher (sopa) de fermento em pó\nPara untar:\nmanteiga e fubá",
+    "steps": "Pré-aqueça o forno a 180 °C e unte a forma com manteiga e fubá.\n"
+             "Bata no liquidificador os ovos, o açúcar, o leite e o óleo por 2 minutos.\n"
+             "Junte o fubá e a farinha e bata só até misturar.\n"
+             "Desligue e misture o fermento com uma colher.\n"
+             "Asse por uns 40 minutos, até o palito sair limpo.",
+    "notes": "Receita de exemplo: edite ou apague quando quiser.\nFica ótimo com café passado na hora.",
+}
+if not store.FILE.exists():  # livro novo: começa com uma receita de exemplo em vez de vazio
+    store.save(EXAMPLE)
+
 store.MEDIA.mkdir(parents=True, exist_ok=True)
 app.mount("/media", StaticFiles(directory=store.MEDIA), name="media")  # nomes uuid: nunca mudam
 app.mount("/", AlwaysRevalidate(directory=WEB, html=True), name="web")

@@ -40,30 +40,21 @@
   aspect-ratio: 1.15;
   margin: .3em 0 .2em;
   padding: 2.5cqw;
+  border-radius: 50% 50% 10px 10px / 34% 34% 10px 10px;
+  outline: 1px solid var(--gold);
+  outline-offset: -1.4cqw;
   background: var(--cream);
   box-shadow: 0 2px 6px var(--shadow-soft), 0 1px 1px var(--shadow-soft);
   rotate: -1deg;
   cursor: pointer;
 }
-.photo::after {
-  content: "";
-  position: absolute;
-  inset: -1cqw;
-  pointer-events: none;
-  --k: 7cqw;
-  background:
-    linear-gradient(135deg, var(--leather-dark) 50%, transparent 50%) top left / var(--k) var(--k) no-repeat,
-    linear-gradient(225deg, var(--leather-dark) 50%, transparent 50%) top right / var(--k) var(--k) no-repeat,
-    linear-gradient(315deg, var(--leather-dark) 50%, transparent 50%) bottom right / var(--k) var(--k) no-repeat,
-    linear-gradient(45deg, var(--leather-dark) 50%, transparent 50%) bottom left / var(--k) var(--k) no-repeat;
-  opacity: .85;
-}
-.photo img { width: 100%; height: 100%; object-fit: cover; }
+.photo img { width: 100%; height: 100%; object-fit: cover; border-radius: 50% 50% 6px 6px / 34% 34% 6px 6px; }
 .photo__empty {
   display: none;
   height: 100%;
   place-items: center;
   border: 1px dashed var(--ink-soft);
+  border-radius: 50% 50% 6px 6px / 34% 34% 6px 6px;
   color: var(--ink-soft);
   font: italic 1.05em var(--font-title);
 }
@@ -98,6 +89,8 @@
     var(--fibers),
     var(--card);
   box-shadow: 0 4px 10px var(--shadow-soft), 0 1px 1px var(--shadow-soft);
+  border-radius: 2.2em .5em 2.2em .5em;
+  padding-inline: 1.3em;
   rotate: .6deg;
 }
 .note.is-empty { display: none; }
