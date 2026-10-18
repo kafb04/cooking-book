@@ -1,4 +1,4 @@
-/* O livro: palco, folhas que viram em 3D, base de toda página, capa, guardas e sumário. */
+/* O livro: palco, folhas que viram em 3D, papel, miolo grosso, capa dura de couro, guardas e sumário. */
 .stage {
   flex: 1;
   display: grid;
@@ -6,19 +6,43 @@
   align-items: center;
   justify-content: center;
   gap: clamp(.75rem, 2vw, 2rem);
-  padding: .5rem var(--gutter) 1.5rem;
+  padding: .5rem var(--gutter) 2rem;
 }
 
 .book {
   position: relative;
-  height: min(82dvh, calc((100vw - 14rem) / 1.44));
+  height: min(78dvh, calc((100vw - 16rem) / 1.44));
   aspect-ratio: 1.44;
   perspective: 2600px;
   touch-action: pan-y;
   transition: transform calc(var(--flip-ms) * 1ms) ease;
+  /* Pilhas de folhas: a da direita afina e a da esquerda engrossa conforme lê (--done vem do book.js) */
+  --stack: 22px;
+  --rs: calc(var(--stack) * (1 - var(--done, 0)) + 4px);
+  --ls: calc(var(--stack) * var(--done, 0) + 4px);
 }
 .book.is-closed-front { transform: translateX(-25%); }
 .book.is-closed-back { transform: translateX(25%); }
+.book.is-instant, .book.is-instant .leaf, .book.is-instant::before { transition: none; }
+
+/* Capa dura aparecendo em volta do miolo quando o livro está aberto */
+.book::before {
+  content: "";
+  position: absolute;
+  inset: -3.2% -2.6% -4.2%;
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, transparent 47%, var(--leather-dark) 50%, transparent 53%),
+    var(--leather-tex),
+    radial-gradient(ellipse at 40% 30%, var(--leather-light), var(--leather) 55%, var(--leather-dark));
+  background-blend-mode: normal, multiply, normal;
+  box-shadow:
+    inset 2px 2px 0 color-mix(in srgb, var(--leather-light) 70%, transparent),
+    inset -3px -3px 0 var(--leather-dark),
+    0 34px 60px var(--shadow);
+  transition: opacity calc(var(--flip-ms) * .6ms);
+}
+.book.is-closed-front::before, .book.is-closed-back::before { opacity: 0; }
 
 .leaf {
   position: absolute;
@@ -31,7 +55,6 @@
   transition: transform calc(var(--flip-ms) * 1ms) cubic-bezier(.45, .05, .3, 1);
 }
 .leaf.is-turned { transform: rotateY(-180deg); }
-.book.is-instant, .book.is-instant .leaf { transition: none; }
 .leaf.is-far { display: none; }
 
 .leaf__face {
@@ -41,7 +64,7 @@
   container-type: size;
 }
 .leaf__face--back { transform: rotateY(180deg); }
-.leaf__face::after { /* sombra que passa pela folha enquanto vira */
+.leaf__face::after { /* sombra que corre pela folha enquanto vira */
   content: "";
   position: absolute;
   inset: 0;
@@ -53,8 +76,20 @@
 .leaf__face--back::after { background: linear-gradient(to left, var(--shadow), transparent 45%); }
 .leaf.is-turning .leaf__face::after { opacity: 1; }
 
-/* ---------- Base de toda página ---------- */
+/* ---------- Toda página: papel envelhecido + borda de folhas empilhadas ---------- */
 .page {
+  --s: var(--rs);
+  --dir: 1;
+  --pile:
+    calc(var(--s) * .125 * var(--dir)) calc(var(--s) * .05) 0 var(--paper-edge),
+    calc(var(--s) * .25 * var(--dir)) calc(var(--s) * .1) 0 var(--paper),
+    calc(var(--s) * .375 * var(--dir)) calc(var(--s) * .15) 0 var(--paper-edge),
+    calc(var(--s) * .5 * var(--dir)) calc(var(--s) * .2) 0 var(--paper),
+    calc(var(--s) * .625 * var(--dir)) calc(var(--s) * .25) 0 var(--paper-edge),
+    calc(var(--s) * .75 * var(--dir)) calc(var(--s) * .3) 0 var(--paper),
+    calc(var(--s) * .875 * var(--dir)) calc(var(--s) * .35) 0 var(--paper-edge),
+    calc((var(--s) + 5px) * var(--dir)) calc(var(--s) * .4 + 4px) 0 var(--leather-dark),
+    0 26px 44px var(--shadow);
   position: absolute;
   inset: 0;
   display: flex;
@@ -62,21 +97,29 @@
   gap: .6em;
   padding: 7cqw 7cqw 9cqw;
   overflow: hidden;
-  background: var(--paper);
   color: var(--ink);
-  font: clamp(1.1rem, 4.6cqw, 1.7rem)/1.25 var(--font-hand);
-  border-radius: 4px 16px 16px 4px;
-  box-shadow:
-    inset 26px 0 26px -22px var(--spine),
-    2px 0 0 var(--paper-edge), 4px 1px 0 var(--paper), 5px 2px 0 var(--paper-edge),
-    0 14px 30px var(--shadow);
+  font: clamp(.8rem, 3.4cqw, 1.2rem)/1.3 var(--font-hand);
+  border-radius: 2px 6px 6px 2px;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(to right, var(--spine), transparent 9%, transparent 94%, color-mix(in srgb, var(--paper-edge) 60%, transparent)),
+    radial-gradient(circle at 14% 22%, var(--stain) 0 1.5%, transparent 5%),
+    radial-gradient(circle at 82% 74%, var(--stain) 0 2.5%, transparent 8%),
+    radial-gradient(circle at 64% 12%, var(--stain) 0 1%, transparent 3%),
+    radial-gradient(ellipse at 50% 50%, transparent 55%, var(--paper-edge) 100%),
+    var(--fibers);
+  box-shadow: var(--pile);
 }
 .leaf__face--back .page {
-  border-radius: 16px 4px 4px 16px;
-  box-shadow:
-    inset -26px 0 26px -22px var(--spine),
-    -2px 0 0 var(--paper-edge), -4px 1px 0 var(--paper), -5px 2px 0 var(--paper-edge),
-    0 14px 30px var(--shadow);
+  --s: var(--ls);
+  --dir: -1;
+  border-radius: 6px 2px 2px 6px;
+  background-image:
+    linear-gradient(to left, var(--spine), transparent 9%, transparent 94%, color-mix(in srgb, var(--paper-edge) 60%, transparent)),
+    radial-gradient(circle at 80% 30%, var(--stain) 0 1.2%, transparent 4%),
+    radial-gradient(circle at 20% 80%, var(--stain) 0 2%, transparent 7%),
+    radial-gradient(ellipse at 50% 50%, transparent 55%, var(--paper-edge) 100%),
+    var(--fibers);
 }
 .page__scroll {
   flex: 1;
@@ -84,7 +127,7 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
-  scrollbar-color: var(--bubblegum) transparent;
+  scrollbar-color: var(--paper-edge) transparent;
 }
 .page__num {
   position: absolute;
@@ -93,139 +136,171 @@
   font: 600 .8rem var(--font-ui);
   color: var(--ink-soft);
 }
-.page__num::before, .page__num::after { content: " ♥ "; color: var(--rule); }
+.page__num::before, .page__num::after { content: " — "; }
 .leaf__face--back .page__num { right: auto; left: 6cqw; }
 
-/* Pauta de caderno: linhas acompanham o texto mesmo rolando */
+/* Pauta de caderno: as linhas acompanham o texto mesmo rolando */
 .lined {
   line-height: var(--line);
   background-image:
-    linear-gradient(90deg, transparent 1.6em, var(--margin-line) 1.6em calc(1.6em + 2px), transparent 0),
+    linear-gradient(90deg, transparent 1.6em, var(--margin-line) 1.6em calc(1.6em + 1px), transparent 0),
     linear-gradient(transparent calc(100% - 1px), var(--rule) 0);
   background-size: 100% 100%, 100% var(--line);
   background-attachment: local;
   padding-left: 2.1em;
 }
 
-/* Faixa de título (sumário, anotações) */
-.banner {
-  position: relative;
+.heading {
   align-self: center;
   margin: 0 0 .3em;
-  padding: .05em 1.4em .2em;
-  font: clamp(1.3rem, 7cqw, 2.4rem)/1.5 var(--font-title);
-  color: var(--white);
-  background: linear-gradient(var(--bubblegum), var(--barbie));
-  border-radius: 6px;
-  text-shadow: 0 2px 0 var(--barbie-deep);
-  box-shadow: 0 4px 0 var(--barbie-deep);
-  clip-path: polygon(0 0, 100% 0, 96% 50%, 100% 100%, 0 100%, 4% 50%);
+  padding: 0 .3em .1em;
+  font: italic clamp(1.2rem, 6.5cqw, 2.2rem)/1.4 var(--font-title);
+  color: var(--accent);
+  border-bottom: 3px double var(--accent);
 }
-.banner--soft { background: linear-gradient(var(--lilac), var(--lilac-deep)); box-shadow: none; text-shadow: none; }
 
-/* ---------- Capa e contracapa de veludo matelassê ---------- */
-.velvet {
-  background:
-    repeating-linear-gradient(45deg, transparent 0 9cqw, var(--gloss) 9cqw calc(9cqw + 1.5px)),
-    repeating-linear-gradient(-45deg, transparent 0 9cqw, var(--gloss) 9cqw calc(9cqw + 1.5px)),
-    radial-gradient(ellipse at 30% 18%, var(--bubblegum), var(--barbie) 55%, var(--barbie-deep));
-  background-blend-mode: soft-light, soft-light, normal;
-  color: var(--white);
+/* ---------- Capa dura de couro, antiga e pesada ---------- */
+.page.leather {
+  --scuff: color-mix(in srgb, var(--paper) 14%, transparent);
+  --rib: linear-gradient(transparent 0 45%, var(--leather-dark) 45% 50%, var(--leather-light) 50% 62%, var(--leather-dark) 62% 70%, transparent 70%);
+  --spine-x: 0;
+  color: var(--cream);
   justify-content: center;
   cursor: pointer;
-  box-shadow: inset 0 0 0 3cqw color-mix(in srgb, var(--barbie-deep) 35%, transparent), 0 16px 34px var(--shadow);
+  border-radius: 6px 10px 10px 6px;
+  /* lombada com 4 nervuras + sulco da dobradiça, arranhões, textura e luz do couro */
+  background-image:
+    var(--rib), var(--rib), var(--rib), var(--rib),
+    linear-gradient(90deg, var(--leather-dark), var(--leather-light) 25%, var(--leather) 55%, var(--leather-dark) 92%, transparent 92% 96%, var(--leather-dark) 96% 100%),
+    radial-gradient(ellipse 18% 10% at 72% 86%, var(--scuff), transparent),
+    radial-gradient(ellipse 12% 7% at 30% 12%, var(--scuff), transparent),
+    radial-gradient(ellipse 30% 5% at 60% 98%, var(--scuff), transparent),
+    var(--leather-tex),
+    radial-gradient(ellipse at 35% 25%, var(--leather-light), var(--leather) 50%, var(--leather-dark));
+  background-size: 11cqw 4cqw, 11cqw 4cqw, 11cqw 4cqw, 11cqw 4cqw, 11cqw 100%, auto, auto, auto, auto, auto;
+  background-position: var(--spine-x) 18%, var(--spine-x) 38%, var(--spine-x) 62%, var(--spine-x) 82%, var(--spine-x) 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat, no-repeat;
+  background-blend-mode: normal, normal, normal, normal, normal, normal, normal, normal, multiply, normal;
+  box-shadow:
+    inset 2px 2px 0 color-mix(in srgb, var(--leather-light) 70%, transparent),
+    inset -3px -3px 0 var(--leather-dark),
+    inset 0 0 7cqw var(--leather-dark),
+    var(--pile);
 }
-.velvet::before { /* costura */
+.leaf__face--back .leather { border-radius: 10px 6px 6px 10px; }
+.page--back { --spine-x: 100%; }
+.leather::before { /* costura */
   content: "";
   position: absolute;
-  inset: 4.5cqw;
-  border: 3px dashed var(--rose-gold-light);
-  border-radius: 14px;
-  opacity: .85;
+  inset: 3.5cqw 3.5cqw 3.5cqw 14cqw;
+  border: 2px dashed var(--paper-edge);
+  border-radius: 4px;
+  opacity: .45;
   pointer-events: none;
 }
-.cover__content { text-align: center; position: relative; }
-.cover__emblem {
-  width: 30cqw;
-  height: 30cqw;
-  fill: var(--rose-gold);
-  stroke: var(--rose-gold-light);
-  stroke-width: 1.2px;
-  filter: drop-shadow(0 4px 0 var(--barbie-deep)) drop-shadow(0 10px 14px var(--shadow));
-  animation: heartbeat 2.4s ease-in-out infinite;
+.page--back::before { inset: 3.5cqw 14cqw 3.5cqw 3.5cqw; }
+.leather::after { /* cantoneiras de latão no lado de fora */
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  --c: 14cqw;
+  --metal: var(--gold-light), var(--gold) 30%, var(--gold-dark) 50%, transparent 50%;
+  background:
+    linear-gradient(225deg, var(--metal)) top right / var(--c) var(--c) no-repeat,
+    linear-gradient(315deg, var(--metal)) bottom right / var(--c) var(--c) no-repeat;
 }
-.cover__emblem--small { width: 20cqw; height: 20cqw; }
-.cover__pre { margin: .4em 0 0; font: 600 clamp(1rem, 5.5cqw, 1.8rem) var(--font-ui); letter-spacing: .12em; text-transform: uppercase; color: var(--rose-gold-light); }
-.cover__title {
+.page--back::after {
+  background:
+    linear-gradient(135deg, var(--metal)) top left / var(--c) var(--c) no-repeat,
+    linear-gradient(45deg, var(--metal)) bottom left / var(--c) var(--c) no-repeat;
+}
+
+.cover__content {
+  position: relative;
+  margin-left: 8cqw;
+  padding: 1.1em 1.4em;
+  text-align: center;
+  border: 4px double var(--gold);
+  outline: 1px solid var(--gold);
+  outline-offset: 7px;
+}
+.cover__content--back { margin: 0 8cqw 0 0; padding: 1.4em; align-self: center; }
+.cover__unicorn {
+  display: block;
+  width: 58cqw;
+  margin: 0 auto .2em;
+  filter: drop-shadow(0 3px 2px var(--leather-dark)) drop-shadow(0 0 1px var(--leather-dark));
+}
+.unicorn__plate { fill: var(--leather-dark); stroke: var(--gold); stroke-width: 2.6; }
+.unicorn__ring { fill: none; stroke: var(--gold); stroke-width: .7; }
+.unicorn__scene { fill: none; stroke: var(--gold); stroke-width: .7; stroke-linejoin: round; opacity: .55; }
+.unicorn__body { fill: var(--gold); }
+.unicorn__wing-far { opacity: .7; }
+.unicorn__legs { fill: none; stroke: var(--gold); stroke-width: 4.2; stroke-linecap: round; stroke-linejoin: round; }
+.unicorn__lines { fill: none; stroke: var(--leather-dark); stroke-width: 1.1; stroke-linecap: round; opacity: .6; }
+
+.cover__pre { margin: .3em 0 0; font: 600 clamp(.85rem, 4.6cqw, 1.5rem) var(--font-ui); letter-spacing: .3em; text-transform: uppercase; color: var(--gold-light); }
+.cover__title { /* douração prensada no couro */
   margin: 0;
-  padding: 0 .2em .15em;
-  font: clamp(2.4rem, 17cqw, 6rem)/1.35 var(--font-title);
-  background: linear-gradient(var(--rose-gold-light) 25%, var(--rose-gold) 60%, var(--rose-gold-light) 85%);
+  padding: 0 .2em .1em;
+  font: italic clamp(2.2rem, 15cqw, 5.4rem)/1.2 var(--font-title);
+  background: linear-gradient(175deg, var(--gold-light) 20%, var(--gold) 45%, var(--gold-dark) 62%, var(--gold-light) 85%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 3px 0 var(--barbie-deep)) drop-shadow(0 8px 10px var(--shadow));
+  filter: drop-shadow(0 -1px 0 var(--leather-dark)) drop-shadow(0 2px 1px var(--leather-dark));
 }
-.cover__sub { margin: .3em 0 0; font-size: clamp(1.1rem, 6cqw, 2rem); color: var(--blush); }
+.cover__sub { margin: 0; font: italic clamp(.9rem, 5cqw, 1.6rem) var(--font-title); color: var(--paper-edge); }
+.cover__ornament { margin: .2em 0 0; font-size: clamp(1.3rem, 7cqw, 2.4rem); line-height: 1; color: var(--gold); text-shadow: 0 1px 0 var(--leather-dark); }
 
-.clasp { /* fecho de diário */
+.clasp { /* alça de couro com botão de pressão */
   position: absolute;
   right: 0;
   top: 50%;
-  width: 15cqw;
-  height: 11cqw;
   translate: 0 -50%;
-  border-radius: 8px 0 0 8px;
-  background: linear-gradient(var(--rose-gold-light), var(--rose-gold));
-  box-shadow: 0 3px 0 var(--barbie-deep), 0 6px 10px var(--shadow);
+  width: 17cqw;
+  height: 13cqw;
+  border-radius: 6cqw 0 0 6cqw;
   display: grid;
   place-items: center;
+  background: var(--leather-tex), linear-gradient(var(--leather-light), var(--leather) 60%, var(--leather-dark));
+  background-blend-mode: multiply, normal;
+  box-shadow: 0 3px 0 var(--leather-dark), 0 8px 14px var(--shadow);
 }
-.clasp svg { width: 6cqw; height: 6cqw; fill: var(--barbie); }
-
-.sparkle {
-  position: absolute;
-  left: var(--x);
-  top: var(--y);
+.clasp::after {
+  content: "";
   width: 6cqw;
   height: 6cqw;
-  fill: var(--rose-gold-light);
-  animation: twinkle 2.4s var(--d) ease-in-out infinite;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--gold-light), var(--gold) 50%, var(--gold-dark));
+  box-shadow: 0 2px 2px var(--leather-dark);
 }
 
-@keyframes twinkle {
-  0%, 100% { opacity: .2; transform: scale(.5) rotate(0); }
-  50% { opacity: 1; transform: scale(1) rotate(45deg); }
-}
-@keyframes heartbeat {
-  0%, 60%, 100% { transform: scale(1); }
-  20% { transform: scale(1.07); }
-  40% { transform: scale(.97); }
-}
-
-/* ---------- Guardas (parte de dentro da capa) ---------- */
-.page--endpaper {
+/* ---------- Guardas marmorizadas + ex-libris ---------- */
+.page.page--endpaper {
   justify-content: center;
   align-items: center;
-  background-color: var(--baby);
-  background-image:
-    radial-gradient(circle, var(--white) 18%, transparent 20%),
-    radial-gradient(circle, color-mix(in srgb, var(--bubblegum) 35%, transparent) 18%, transparent 20%);
-  background-size: 8cqw 8cqw;
-  background-position: 0 0, 4cqw 4cqw;
+  background-color: var(--sage);
+  background-image: var(--marble), linear-gradient(135deg, var(--sage-deep), var(--sage) 50%, var(--accent));
+  background-size: cover;
+  background-blend-mode: soft-light, normal;
 }
-.endpaper__card {
-  width: 78%;
-  padding: 1.2em 1.4em 1.6em;
-  border: 3px dashed var(--bubblegum);
-  border-radius: var(--radius);
-  background: var(--paper);
-  box-shadow: 0 6px 0 var(--rule), 0 12px 20px var(--shadow-soft);
+.bookplate {
+  width: 70%;
+  padding: 1em 1.2em 1.4em;
+  border: 1px solid var(--ink-soft);
+  outline: 3px double var(--ink-soft);
+  outline-offset: -8px;
+  background: var(--fibers), var(--card);
+  box-shadow: 0 6px 16px var(--shadow);
   text-align: center;
-  rotate: -2deg;
+  font: italic 1.1em var(--font-title);
 }
-.endpaper__text { margin: 0 0 .8em; font-size: 1.25em; }
-.endpaper__line { display: block; border-bottom: 2px dotted var(--ink-soft); height: 1.2em; }
+.bookplate:has(.bookplate__text:empty) { display: none; }
+.bookplate__head { margin: .4em 0 .2em; font-size: 1.4em; letter-spacing: .08em; color: var(--accent); }
+.bookplate__text { margin: 0 0 1em; }
+.bookplate__line { display: block; border-bottom: 1px solid var(--ink-soft); height: 1.4em; margin: 0 .6em; }
 
 /* ---------- Sumário ---------- */
 .toc { list-style: none; margin: 0; padding: 0 .2em; }
@@ -234,18 +309,16 @@
   align-items: baseline;
   gap: .35em;
   padding: .15em .3em;
-  border-radius: 8px;
   color: inherit;
   text-decoration: none;
   cursor: pointer;
-  transition: background .15s, transform .15s;
+  transition: color .15s;
 }
-.toc__item:hover, .toc__item:focus-visible { background: var(--baby); transform: translateX(4px); outline: none; }
-.toc__name { font-weight: 700; }
-.toc__tag { font: 600 .55em var(--font-ui); color: var(--lilac-deep); text-transform: uppercase; letter-spacing: .06em; }
+.toc__item:hover, .toc__item:focus-visible { color: var(--accent); outline: none; }
+.toc__tag { font: 600 .7em var(--font-ui); color: var(--ink-soft); text-transform: uppercase; letter-spacing: .08em; }
 .toc__tag:empty { display: none; }
-.toc__dots { flex: 1; border-bottom: 3px dotted var(--rule); min-width: 1em; }
-.toc__num { font: 600 .75em var(--font-ui); color: var(--barbie); }
+.toc__dots { flex: 1; border-bottom: 2px dotted var(--ink-soft); min-width: 1em; opacity: .6; }
+.toc__num { font: 600 .9em var(--font-ui); color: var(--ink-soft); }
 .toc__empty { text-align: center; margin-top: 2em; color: var(--ink-soft); }
 
 .page--notes .lined { color: var(--ink-soft); }
@@ -260,15 +333,15 @@
   }
   .book {
     grid-area: book;
-    height: min(calc(100dvh - 11.5rem), calc((100vw - 2 * var(--gutter)) / .72));
+    --stack: 8px;
+    height: min(calc(100dvh - 11.5rem), calc((100vw - 2 * var(--gutter) - 14px) / .72));
     aspect-ratio: .72;
-    overflow: clip;
   }
+  .book::before { display: none; }
   .book.is-closed-front, .book.is-closed-back { transform: none; }
   .leaf { left: 0; width: 100%; }
-  .arrow { width: 3.6rem; height: 3.6rem; font-size: 1.7rem; }
   .arrow--prev { grid-area: prev; justify-self: end; margin-right: 1rem; }
   .arrow--next { grid-area: next; justify-self: start; margin-left: 1rem; }
-  .hud__logo { font-size: 1.2rem; }
-  .hud .btn { font-size: .85rem; padding: .45em .9em; }
+  .hud__logo { font-size: 1.15rem; }
+  .hud .btn { font-size: .9rem; padding: .3em .8em; }
 }

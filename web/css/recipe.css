@@ -1,104 +1,105 @@
-/* Layout padrão da receita: cabeçalho, polaroid, seções, post-it e fitinha marcadora. */
-.recipe__head { position: relative; padding-right: 2.6rem; }
+/* Layout padrão da receita: cabeçalho, foto com cantoneiras de álbum, seções, ficha de observações e marcador. */
+.recipe__head { position: relative; padding-right: 3.5rem; }
 .recipe__tag {
-  display: inline-block;
-  padding: .1em .8em;
-  border-radius: 999px;
-  background: var(--lilac-soft);
-  color: var(--lilac-deep);
-  font: 600 .55em var(--font-ui);
+  display: block;
+  font: 600 .7em var(--font-ui);
+  color: var(--ink-soft);
   text-transform: uppercase;
-  letter-spacing: .08em;
+  letter-spacing: .14em;
 }
 .recipe__tag:empty { display: none; }
 .recipe__title {
-  margin: .1em 0 0;
-  font: clamp(1.4rem, 8cqw, 2.6rem)/1.3 var(--font-title);
-  color: var(--barbie);
-  text-decoration: underline wavy var(--rule);
-  text-decoration-thickness: 2px;
-  text-underline-offset: .3em;
+  margin: .05em 0 0;
+  padding-bottom: .15em;
+  font: italic clamp(1.3rem, 7.5cqw, 2.4rem)/1.2 var(--font-title);
+  color: var(--accent-deep);
+  border-bottom: 1px solid var(--gold);
   overflow-wrap: anywhere;
 }
-.btn-round--sticker { position: absolute; top: 0; right: 0; rotate: 8deg; }
+.recipe__edit { position: absolute; top: 0; right: 0; }
 
-.ribbon {
+.ribbon { /* fita de seda marcadora */
   position: absolute;
   top: 0;
   right: 30cqw;
-  width: 6cqw;
-  height: 7cqw;
-  background: linear-gradient(90deg, var(--barbie), var(--bubblegum) 50%, var(--barbie));
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
+  width: 4.5cqw;
+  height: 8cqw;
+  background: linear-gradient(90deg, var(--accent-deep), var(--accent) 45%, color-mix(in srgb, var(--accent) 70%, var(--cream)) 55%, var(--accent-deep));
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
+  box-shadow: 0 2px 3px var(--shadow-soft);
   transition: height .2s;
 }
-.ribbon:hover, .ribbon:focus-visible { height: 10cqw; outline: none; }
+.ribbon:hover, .ribbon:focus-visible { height: 11cqw; outline: none; }
 
-/* ---------- Polaroid com fita ---------- */
-.polaroid {
+/* ---------- Foto colada no álbum com cantoneiras ---------- */
+.photo {
   position: relative;
   flex: none;
   align-self: center;
   height: 38%;
-  aspect-ratio: 1.1;
+  aspect-ratio: 1.15;
   margin: .3em 0 .2em;
-  padding: 3.5cqw 3.5cqw 9cqw;
-  background: var(--white);
-  box-shadow: 0 6px 16px var(--shadow-soft), 0 1px 3px var(--shadow-soft);
-  rotate: -2.5deg;
+  padding: 2.5cqw;
+  background: var(--cream);
+  box-shadow: 0 2px 6px var(--shadow-soft), 0 1px 1px var(--shadow-soft);
+  rotate: -1deg;
   cursor: pointer;
 }
-.polaroid::before {
+.photo::after {
   content: "";
   position: absolute;
-  top: -3.5cqw;
-  left: 30%;
-  width: 40%;
-  height: 7cqw;
-  background: var(--tape);
-  rotate: -4deg;
+  inset: -1cqw;
+  pointer-events: none;
+  --k: 7cqw;
+  background:
+    linear-gradient(135deg, var(--leather-dark) 50%, transparent 50%) top left / var(--k) var(--k) no-repeat,
+    linear-gradient(225deg, var(--leather-dark) 50%, transparent 50%) top right / var(--k) var(--k) no-repeat,
+    linear-gradient(315deg, var(--leather-dark) 50%, transparent 50%) bottom right / var(--k) var(--k) no-repeat,
+    linear-gradient(45deg, var(--leather-dark) 50%, transparent 50%) bottom left / var(--k) var(--k) no-repeat;
+  opacity: .85;
 }
-.polaroid img { width: 100%; height: 100%; object-fit: cover; }
-.polaroid__empty {
+.photo img { width: 100%; height: 100%; object-fit: cover; }
+.photo__empty {
   display: none;
   height: 100%;
   place-items: center;
-  border: 3px dashed var(--rule);
-  border-radius: 6px;
+  border: 1px dashed var(--ink-soft);
   color: var(--ink-soft);
-  text-align: center;
+  font: italic 1.05em var(--font-title);
 }
-.polaroid.is-empty img { display: none; }
-.polaroid.is-empty .polaroid__empty { display: grid; }
+.photo.is-empty img { display: none; }
+.photo.is-empty .photo__empty { display: grid; }
 
 /* ---------- Seções ---------- */
 .recipe__section { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 .recipe__label {
   margin: 0 0 .1em;
-  font: clamp(1.05rem, 5.6cqw, 1.8rem)/1.4 var(--font-title);
-  color: var(--bubblegum);
+  font: italic clamp(1rem, 5.4cqw, 1.7rem)/1.4 var(--font-title);
+  color: var(--accent);
 }
 .recipe__list { list-style: none; margin: 0; padding: 0; }
-.recipe__list li::before { content: "♥ "; color: var(--bubblegum); font-size: .8em; }
-.recipe__list li.is-sub { font-weight: 700; color: var(--barbie); }
-.recipe__list li.is-sub::before { content: "✿ "; }
+.recipe__list li::before { content: "– "; color: var(--ink-soft); }
+.recipe__list li.is-sub { color: var(--accent); }
+.recipe__list li.is-sub::before { content: ""; }
 .recipe__steps p, .recipe__notes p { margin: 0; }
-.ink { width: 100%; }
+.ink { width: 100%; mix-blend-mode: multiply; }
 .ink:not([src]) { display: none; }
 
-/* ---------- Post-it de observações ---------- */
-.postit {
+/* ---------- Ficha de observações (cartão pautado com linha vermelha) ---------- */
+.note {
   position: relative;
   flex: none;
   max-height: 40%;
   display: flex;
   flex-direction: column;
-  padding: .6em .9em .8em;
-  background: linear-gradient(var(--lilac-soft), color-mix(in srgb, var(--lilac-soft) 70%, var(--lilac)));
-  box-shadow: 0 8px 14px var(--shadow-soft);
-  rotate: 1.4deg;
-  clip-path: polygon(0 0, 100% 0, 100% 88%, 94% 100%, 0 100%);
+  padding: .5em .9em .8em;
+  background:
+    linear-gradient(transparent 2.4em, var(--margin-line) 2.4em calc(2.4em + 1px), transparent 0),
+    var(--fibers),
+    var(--card);
+  box-shadow: 0 4px 10px var(--shadow-soft), 0 1px 1px var(--shadow-soft);
+  rotate: .6deg;
 }
-.postit.is-empty { display: none; }
-.postit__label { margin: 0; font: clamp(.95rem, 5cqw, 1.5rem)/1.4 var(--font-title); color: var(--lilac-deep); }
-.postit__body { overflow-y: auto; min-height: 0; scrollbar-width: thin; scrollbar-color: var(--lilac) transparent; }
+.note.is-empty { display: none; }
+.note__label { margin: 0 0 .5em; font: italic clamp(.95rem, 4.8cqw, 1.4rem)/1.4 var(--font-title); color: var(--sage-deep); }
+.note__body { overflow-y: auto; min-height: 0; scrollbar-width: thin; scrollbar-color: var(--paper-edge) transparent; }

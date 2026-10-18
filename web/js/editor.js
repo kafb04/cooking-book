@@ -7,7 +7,7 @@ const MEDIA = id => `/media/${id}`;
 
 const dlg = document.getElementById('editor');
 const form = dlg.querySelector('form');
-const preview = dlg.querySelector('.polaroid--mini');
+const preview = dlg.querySelector('.photo--mini');
 const photoInput = document.getElementById('photo');
 const saveBtn = form.querySelector('[value="save"]');
 const pads = {};
@@ -68,7 +68,7 @@ photoInput.addEventListener('change', async () => {
     photo = await shrink(file);
     showPhoto(URL.createObjectURL(photo));
   } catch {
-    api.toast('Não consegui abrir essa foto 😢 tenta JPG ou PNG');
+    api.toast('Não consegui abrir essa foto. Tente JPG ou PNG.');
   }
 });
 
@@ -104,13 +104,13 @@ form.addEventListener('submit', async e => {
     if (photo) await api.putMedia(saved.id, 'photo', photo);
     else if (photo === null && saved.photo) await api.dropMedia(saved.id, 'photo');
     dlg.close();
-    api.toast('Guardada no livro ♥');
+    api.toast('Receita guardada no livro');
     onSaved(saved.id);
   } catch (err) {
     api.toast(err.message); // janela continua aberta: nada do que foi escrito se perde
   } finally {
     saveBtn.disabled = false;
-    saveBtn.textContent = 'Guardar no livro ♥';
+    saveBtn.textContent = 'Guardar no livro';
   }
 });
 
@@ -122,7 +122,7 @@ export async function openEditor(r, categories = []) {
   recipe = r;
   photo = undefined;
   form.reset();
-  dlg.querySelector('.window__title').textContent = r ? 'Editar receita' : 'Nova receita';
+  dlg.querySelector('.sheet__title').textContent = r ? 'Editar receita' : 'Nova receita';
   dlg.querySelector('[data-delete]').hidden = !r;
   for (const k of ['title', 'category', ...Object.keys(SECTIONS)]) form.elements[k].value = r?.[k] ?? '';
   document.getElementById('categories').replaceChildren(

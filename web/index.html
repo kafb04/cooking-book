@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Livro de Receitas</title>
-  <meta name="theme-color" content="#e0218a">
+  <meta name="theme-color" content="#2c170b">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Fredoka:wght@400..700&family=Pacifico&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Homemade+Apple&family=IM+Fell+English:ital@0;1&display=swap">
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/book.css">
@@ -19,54 +19,75 @@
 </head>
 <body>
   <svg class="sprite" aria-hidden="true">
-    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 21.2s-7.6-4.6-10-9.4C.3 8.3 2.3 3.8 6.3 3.8c2.4 0 4 1.4 5.7 3.6 1.7-2.2 3.3-3.6 5.7-3.6 4 0 6 4.5 4.3 8-2.4 4.8-10 9.4-10 9.4z"/></symbol>
-    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4.2 9.6h8.6V5.9c0-1.1 1.3-1.7 2.1-1l7 6.1c.6.5.6 1.4 0 1.9l-7 6.1c-.8.7-2.1.1-2.1-1v-3.7H4.2a2.1 2.1 0 0 1 0-4.2z"/></symbol>
-    <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 0c.9 6.4 2.8 9.6 12 12-9.2 2.4-11.1 5.6-12 12-.9-6.4-2.8-9.6-12-12C9.2 9.6 11.1 6.4 12 0z"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M9 4.5 16.5 12 9 19.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <!-- Relevo da douração (luz + sombra a partir do próprio desenho) -->
+    <filter id="f-emboss" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.4" result="b"/>
+      <feSpecularLighting in="b" surfaceScale="4" specularConstant=".75" specularExponent="18" lighting-color="#fff" result="s"><feDistantLight azimuth="235" elevation="42"/></feSpecularLighting>
+      <feComposite in="s" in2="SourceAlpha" operator="in" result="hl"/>
+      <feDropShadow in="SourceGraphic" dx="0" dy="1.6" stdDeviation="1.1" flood-opacity=".65" result="sh"/>
+      <feComposite in="hl" in2="sh" operator="arithmetic" k2=".5" k3="1"/>
+    </filter>
+    <!-- Medalhão da capa: unicórnio alado empinando -->
+    <symbol id="art-unicorn" viewBox="0 0 120 100">
+      <ellipse class="unicorn__plate" cx="60" cy="50" rx="58" ry="48"/>
+      <ellipse class="unicorn__ring" cx="60" cy="50" rx="53" ry="43"/>
+      <path class="unicorn__scene" d="M14 74l12-9 9 6 13-12 10 9 9-7 12 10 10-6 12 9M20 40l3-2 3 2M30 32l2-1.5 2 1.5M94 30l3-2 3 2M100 42l2-1.5 2 1.5"/>
+      <g filter="url(#f-emboss)" transform="translate(14 10) scale(.78)">
+        <path class="unicorn__body unicorn__wing-far" d="M62 40C60 26 58 14 54 0c4 4 6 6 6 10 2 0 4 2 4 6 2 0 4 4 2 8 3 2 2 6 0 8z"/>
+        <g class="unicorn__body">
+          <path d="M58 42C52 28 42 14 28 4c2 6 2 10 6 14-4 0-6 4-2 8-4 1-4 5 0 8-3 2-1 6 4 7-2 3 2 6 8 5 4 2 10 0 14-4z"/>
+          <path d="M38 58C26 54 18 64 14 74c-3 8 2 14-6 20 12-4 12-14 18-22 4-6 8-8 14-8z"/>
+          <path d="M62 40c-10 2-20 8-26 18-4 8 0 16 8 18 8 1 16-6 22-14 4-6 6-12 4-18z"/>
+          <path d="M60 42c2-10 6-20 14-27l2-3 2 2c4-2 8 1 11 6 2 3 2 5-1 6-3 0-6-1-9-2-3 6-5 14-7 22z"/>
+          <path d="M80 13L93 1 83 15z"/>
+          <path d="M72 16c-8 2-10 10-14 14 4 0 2 6-2 10 4 0 4 4 4 6l6-10z"/>
+        </g>
+        <path class="unicorn__legs" d="M66 52l13-6 4 11M64 56l11-2 1 10M46 70c-4 6-10 10-12 14l6 12M52 72c0 8-2 12-2 16l4 8"/>
+        <path class="unicorn__lines" d="M34 18c6 6 12 14 20 22M32 26c8 6 14 11 22 16M32 34c8 4 14 7 20 10M82 17.5h.1"/>
+      </g>
+    </symbol>
   </svg>
 
   <header class="hud">
-    <h1 class="hud__logo"><svg class="icon"><use href="#i-heart"/></svg> Receitinhas</h1>
+    <h1 class="hud__logo">Livro de Receitas</h1>
     <nav class="hud__actions">
-      <button class="btn" type="button" data-action="new">+ Nova receita</button>
-      <label class="btn btn--lilac">Importar .docx<input type="file" id="import" accept=".docx" multiple hidden></label>
+      <button class="btn" type="button" data-action="new">Nova receita</button>
+      <label class="btn btn--quiet">Importar .docx<input type="file" id="import" accept=".docx" multiple hidden></label>
     </nav>
   </header>
 
   <main class="stage">
-    <button class="arrow arrow--prev" type="button" data-turn="-1" aria-label="Página anterior">
-      <svg class="icon"><use href="#i-arrow"/></svg><svg class="arrow__heart"><use href="#i-heart"/></svg>
-    </button>
+    <button class="arrow arrow--prev" type="button" data-turn="-1" aria-label="Página anterior"><svg class="icon"><use href="#i-chevron"/></svg></button>
     <div class="book" id="book" aria-live="polite"></div>
-    <button class="arrow arrow--next" type="button" data-turn="1" aria-label="Próxima página">
-      <svg class="icon"><use href="#i-arrow"/></svg><svg class="arrow__heart"><use href="#i-heart"/></svg>
-    </button>
+    <button class="arrow arrow--next" type="button" data-turn="1" aria-label="Próxima página"><svg class="icon"><use href="#i-chevron"/></svg></button>
   </main>
 
-  <dialog class="window" id="editor">
-    <form class="window__form" method="dialog">
-      <header class="window__bar">
-        <h2 class="window__title">Nova receita</h2>
-        <button class="btn-round" value="cancel" formnovalidate aria-label="Fechar">✕</button>
+  <dialog class="sheet" id="editor">
+    <form class="sheet__form" method="dialog">
+      <header class="sheet__bar">
+        <h2 class="sheet__title">Nova receita</h2>
+        <button class="link-btn sheet__close" value="cancel" formnovalidate aria-label="Fechar">✕</button>
       </header>
-      <div class="window__body">
+      <div class="sheet__body">
         <label class="field"><span class="field__label">Nome da receita</span>
           <input name="title" required maxlength="200" autocomplete="off"></label>
         <label class="field"><span class="field__label">Categoria</span>
-          <input name="category" list="categories" maxlength="60" placeholder="Doces, salgados, da vó..." autocomplete="off"></label>
+          <input name="category" list="categories" maxlength="60" placeholder="Doces, salgados, massas..." autocomplete="off"></label>
         <datalist id="categories"></datalist>
         <div class="field field--photo">
           <span class="field__label">Foto do prato</span>
-          <figure class="polaroid polaroid--mini"><img alt="Prévia da foto"></figure>
+          <figure class="photo photo--mini"><img alt="Prévia da foto"></figure>
           <div class="field__actions">
-            <label class="btn btn--small">Escolher foto<input type="file" id="photo" accept="image/*" hidden></label>
-            <button class="btn btn--small btn--ghost" type="button" data-photo-clear>Remover</button>
+            <label class="btn btn--paper btn--small">Escolher foto<input type="file" id="photo" accept="image/*" hidden></label>
+            <button class="btn btn--paper btn--small" type="button" data-photo-clear>Remover</button>
           </div>
         </div>
         <div id="sections"></div>
       </div>
-      <footer class="window__foot">
-        <button class="btn btn--ghost" type="button" data-delete>Apagar receita</button>
-        <button class="btn" type="submit" value="save">Guardar no livro ♥</button>
+      <footer class="sheet__foot">
+        <button class="btn btn--paper btn--danger" type="button" data-delete>Apagar receita</button>
+        <button class="btn" type="submit" value="save">Guardar no livro</button>
       </footer>
     </form>
   </dialog>
@@ -75,29 +96,27 @@
 
   <!-- ========== Páginas do livro (clonadas por js/pages.js) ========== -->
   <template id="tpl-cover">
-    <article class="page page--cover velvet" data-goto="toc" title="Abrir o livro">
-      <div class="clasp" aria-hidden="true"><svg><use href="#i-heart"/></svg></div>
-      <svg class="sparkle" style="--x:18%;--y:16%;--d:0s"><use href="#i-sparkle"/></svg>
-      <svg class="sparkle" style="--x:74%;--y:24%;--d:.8s"><use href="#i-sparkle"/></svg>
-      <svg class="sparkle" style="--x:26%;--y:78%;--d:1.6s"><use href="#i-sparkle"/></svg>
+    <article class="page page--cover leather" data-goto="toc" title="Abrir o livro">
+      <div class="clasp" aria-hidden="true"></div>
       <div class="cover__content">
-        <svg class="cover__emblem"><use href="#i-heart"/></svg>
-        <p class="cover__pre">Meu livro de</p>
+        <svg class="cover__unicorn" viewBox="0 0 120 100" aria-hidden="true"><use href="#art-unicorn"/></svg>
+        <p class="cover__pre">Livro de</p>
         <h2 class="cover__title">Receitas</h2>
-        <p class="cover__sub">receitinhas feitas com amor</p>
+        <p class="cover__sub">da família</p>
+        <p class="cover__ornament" aria-hidden="true">❦</p>
       </div>
     </article>
   </template>
 
   <template id="tpl-endpaper">
     <article class="page page--endpaper">
-      <div class="endpaper__card"><p class="endpaper__text"></p><span class="endpaper__line"></span></div>
+      <div class="bookplate"><p class="bookplate__head">Ex Libris</p><p class="bookplate__text"></p><span class="bookplate__line"></span></div>
     </article>
   </template>
 
   <template id="tpl-toc">
     <article class="page page--toc">
-      <h2 class="banner">Sumário</h2>
+      <h2 class="heading">Sumário</h2>
       <ol class="toc page__scroll"></ol>
       <span class="page__num"></span>
     </article>
@@ -111,7 +130,7 @@
 
   <template id="tpl-notes">
     <article class="page page--notes">
-      <h2 class="banner banner--soft">Anotações</h2>
+      <h2 class="heading">Anotações</h2>
       <div class="page__scroll lined"></div>
       <span class="page__num"></span>
     </article>
@@ -120,13 +139,8 @@
   <template id="tpl-plain"><article class="page page--plain"></article></template>
 
   <template id="tpl-back">
-    <article class="page page--back velvet" data-goto="start" title="Voltar pra capa">
-      <svg class="sparkle" style="--x:70%;--y:20%;--d:.4s"><use href="#i-sparkle"/></svg>
-      <svg class="sparkle" style="--x:24%;--y:70%;--d:1.2s"><use href="#i-sparkle"/></svg>
-      <div class="cover__content">
-        <svg class="cover__emblem cover__emblem--small"><use href="#i-heart"/></svg>
-        <p class="cover__sub">feito com amor, manteiga<br>e um pouquinho de açúcar</p>
-      </div>
+    <article class="page page--back leather" data-goto="start" title="Voltar pra capa">
+      <div class="cover__content cover__content--back"><p class="cover__ornament" aria-hidden="true">❦</p></div>
     </article>
   </template>
 
@@ -137,14 +151,14 @@
       <header class="recipe__head">
         <span class="recipe__tag" data-field="category"></span>
         <h2 class="recipe__title" data-field="title"></h2>
-        <button class="btn-round btn-round--sticker" type="button" data-edit aria-label="Editar receita">✎</button>
+        <button class="link-btn recipe__edit" type="button" data-edit>✎ editar</button>
       </header>
-      <figure class="polaroid" data-edit>
+      <figure class="photo" data-edit>
         <img data-media="photo" alt="" loading="lazy" decoding="async">
-        <figcaption class="polaroid__empty">♥ foto do prato ♥</figcaption>
+        <figcaption class="photo__empty">foto do prato</figcaption>
       </figure>
       <section class="recipe__section">
-        <h3 class="recipe__label"><svg class="icon"><use href="#i-heart"/></svg> Ingredientes</h3>
+        <h3 class="recipe__label">Ingredientes</h3>
         <div class="page__scroll lined">
           <ul class="recipe__list" data-field="ingredients"></ul>
           <img class="ink" data-media="ink_ingredients" alt="Ingredientes escritos à mão" loading="lazy">
@@ -154,15 +168,15 @@
     </article>
     <article class="page page--recipe">
       <section class="recipe__section">
-        <h3 class="recipe__label"><svg class="icon"><use href="#i-heart"/></svg> Como fazer</h3>
+        <h3 class="recipe__label">Modo de preparo</h3>
         <div class="page__scroll lined">
           <div class="recipe__steps" data-field="steps"></div>
-          <img class="ink" data-media="ink_steps" alt="Modo de fazer escrito à mão" loading="lazy">
+          <img class="ink" data-media="ink_steps" alt="Modo de preparo escrito à mão" loading="lazy">
         </div>
       </section>
-      <aside class="postit">
-        <h3 class="postit__label">Observações</h3>
-        <div class="postit__body">
+      <aside class="note">
+        <h3 class="note__label">Observações</h3>
+        <div class="note__body">
           <div class="recipe__notes" data-field="notes"></div>
           <img class="ink" data-media="ink_notes" alt="Observações escritas à mão" loading="lazy">
         </div>
@@ -171,21 +185,21 @@
     </article>
   </template>
 
-  <!-- Bloco de seção do editor (Ingredientes / Como fazer / Observações) -->
+  <!-- Bloco de seção do editor (Ingredientes / Modo de preparo / Observações) -->
   <template id="tpl-section">
     <fieldset class="section">
       <legend class="section__label"></legend>
       <div class="tabs" role="tablist">
-        <button class="tab" type="button" role="tab" data-mode="text">⌨ Teclado</button>
-        <button class="tab" type="button" role="tab" data-mode="ink">✎ Caneta</button>
+        <button class="tab" type="button" role="tab" data-mode="text">Teclado</button>
+        <button class="tab" type="button" role="tab" data-mode="ink">Caneta</button>
       </div>
       <textarea class="lined" rows="6"></textarea>
       <div class="ink-pad">
         <canvas width="1000" height="800"></canvas>
         <div class="ink-pad__tools">
-          <button class="btn btn--small" type="button" data-tool="pen">Caneta</button>
-          <button class="btn btn--small btn--lilac" type="button" data-tool="eraser">Borracha</button>
-          <button class="btn btn--small btn--ghost" type="button" data-tool="clear">Limpar</button>
+          <button class="btn btn--paper btn--small" type="button" data-tool="pen">Caneta</button>
+          <button class="btn btn--paper btn--small" type="button" data-tool="eraser">Borracha</button>
+          <button class="btn btn--paper btn--small" type="button" data-tool="clear">Limpar</button>
         </div>
       </div>
     </fieldset>

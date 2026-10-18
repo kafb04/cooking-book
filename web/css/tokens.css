@@ -1,36 +1,52 @@
-/* Paleta e medidas centrais: TODA cor do app sai daqui. */
+/* Paleta, texturas e fontes centrais: TODA cor do app sai daqui. */
 :root {
-  --bubblegum: #ff5fae;
-  --barbie: #e0218a;
-  --barbie-deep: #a8125f;
-  --baby: #ffd6ea;
-  --blush: #ffeaf4;
-  --lilac: #c8a2ff;
-  --lilac-deep: #8f5fe0;
-  --lilac-soft: #efe4ff;
-  --paper: #fff7fa;
-  --paper-edge: #f1d3e1;
-  --rule: #f6bcd6;
-  --margin-line: #ff8fb1;
-  --ink: #7a1f4b;
-  --ink-soft: #b06a8d;
-  --rose-gold: #e8b4a0;
-  --rose-gold-light: #fde6da;
-  --white: #fff;
+  /* couro */
+  --leather: #6b3d22;
+  --leather-dark: #2c170b;
+  --leather-light: #94603a;
+  /* douração e latão */
+  --gold: #c9a24a;
+  --gold-light: #f0d891;
+  --gold-dark: #6e5320;
+  /* papel e tinta */
+  --paper: #f2e6cc;
+  --paper-edge: #d4c09a;
+  --paper-shade: #e6d6b3;
+  --rule: #d6c0a2;
+  --margin-line: #c46a5a;
+  --ink: #2f1c10;
+  --ink-soft: #7a5a40;
+  /* acentos */
+  --accent: #8b3a1a;
+  --accent-deep: #4a1f0e;
+  --sage: #7d8b5a;
+  --sage-deep: #55613a;
+  --card: #efe6cb;
+  --cream: #fff8ea;
+  /* mesa */
+  --wood: #5e3d26;
+  --wood-dark: #24160d;
+  --lamp: color-mix(in srgb, #ffd9a0 20%, transparent);
 
-  --shadow: color-mix(in srgb, var(--ink) 30%, transparent);
-  --shadow-soft: color-mix(in srgb, var(--ink) 14%, transparent);
-  --spine: color-mix(in srgb, var(--ink) 22%, transparent);
-  --gloss: color-mix(in srgb, var(--white) 55%, transparent);
-  --tape: color-mix(in srgb, var(--lilac) 55%, transparent);
+  --stain: color-mix(in srgb, #a0703a 18%, transparent);
+  --shadow: color-mix(in srgb, #120a05 60%, transparent);
+  --shadow-soft: color-mix(in srgb, #120a05 28%, transparent);
+  --spine: color-mix(in srgb, var(--ink) 30%, transparent);
 
-  --font-title: "Pacifico", "Brush Script MT", cursive;
-  --font-hand: "Caveat", "Segoe Print", cursive;
-  --font-ui: "Fredoka", "Trebuchet MS", system-ui, sans-serif;
+  /* texturas geradas (SVG): só tons de cinza/alpha, a cor vem dos tokens acima via blend */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .5 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --fibers: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7 .25' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .16 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
+  --leather-tex: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='l'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.11' numOctaves='4' seed='4' stitchTiles='stitch'/%3E%3CfeDiffuseLighting lighting-color='%23fff' surfaceScale='1.8' diffuseConstant='1.15'%3E%3CfeDistantLight azimuth='225' elevation='58'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23l)'/%3E%3C/svg%3E");
+  --wood-tex: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2400' height='900'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.003 .085' numOctaves='3' seed='9' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.3 0 0 0 -.4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)'/%3E%3C/svg%3E");
+  --marble: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='turbulence' baseFrequency='.008 .03' numOctaves='4' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.4 0 0 0 -.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
 
-  --line: 1.5em;      /* altura da pauta = altura da linha do texto */
-  --radius: 18px;
-  --flip-ms: 850;     /* duração da virada (ms) — o JS lê este valor */
+  --font-title: "IM Fell English", Georgia, serif;
+  --font-hand: "Homemade Apple", "Segoe Script", cursive;
+  --font-ui: "Cormorant Garamond", Georgia, serif;
+
+  --line: 1.75em;   /* altura da pauta = altura da linha do texto */
+  --radius: 4px;
+  --flip-ms: 950;   /* duração da virada (ms) — o JS lê este valor */
   --gutter: 16px;
 }
 

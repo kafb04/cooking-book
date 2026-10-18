@@ -8,7 +8,7 @@ async function call(method, url, body) {
   });
   if (!res.ok) {
     const detail = (await res.json().catch(() => null))?.detail;
-    throw new Error(typeof detail === 'string' ? detail : 'Algo deu errado, tenta de novo ♥');
+    throw new Error(typeof detail === 'string' ? detail : 'Algo deu errado. Tente de novo.');
   }
   return res.status === 204 ? null : res.json();
 }

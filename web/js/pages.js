@@ -9,7 +9,7 @@ export const notes = () => one('tpl-notes');
 
 export function endpaper(text) {
   const p = one('tpl-endpaper');
-  p.querySelector('.endpaper__text').textContent = text;
+  p.querySelector('.bookplate__text').textContent = text;
   return p;
 }
 
@@ -19,7 +19,7 @@ export function toc(entries) {
   if (!entries.length) {
     const li = document.createElement('li');
     li.className = 'toc__empty';
-    li.textContent = 'Seu livro está esperando a primeira receita ♥';
+    li.textContent = 'Nenhuma receita ainda. Use “Nova receita” ou importe seus .docx.';
     list.append(li);
   }
   for (const e of entries) {
@@ -64,7 +64,7 @@ export function recipe(r) {
     });
     page.querySelectorAll('[data-edit]').forEach(el => { el.dataset.edit = r.id; });
   }
-  a.querySelector('.polaroid').classList.toggle('is-empty', !r.photo);
-  b.querySelector('.postit').classList.toggle('is-empty', !r.notes && !r.ink_notes);
+  a.querySelector('.photo').classList.toggle('is-empty', !r.photo);
+  b.querySelector('.note').classList.toggle('is-empty', !r.notes && !r.ink_notes);
   return [a, b];
 }

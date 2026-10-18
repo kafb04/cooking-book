@@ -31,7 +31,7 @@ export function render(recipes, focus) {
   }
   if (pages.length % 2 === 0) pages.push(P.notes());
   recipes.forEach(r => pages.push(...P.recipe(r)));
-  pages.push(P.notes(), P.endpaper('Fim? Que nada... sempre cabe mais uma receitinha ♥'), P.back());
+  pages.push(P.notes(), P.endpaper(''), P.back());
   pages.forEach((p, i) => { const n = p.querySelector('.page__num'); if (n) n.textContent = i; });
 
   const page = focus in anchors ? anchors[focus] : null;
@@ -86,6 +86,9 @@ function show(target, animate = true) {
     }
     l.classList.toggle('is-turned', isTurned);
   });
+  el.classList.toggle('is-closed-front', spread && turned === 0);
+  el.classList.toggle('is-closed-back', spread && turned === n);
+  el.style.setProperty('--done', turned / Math.max(1, maxTurned())); // espessura das pilhas de folhas
   if (!animate) {
     el.offsetWidth; // aplica a posição final sem transição antes de religá-la
     el.classList.remove('is-instant');
@@ -106,8 +109,6 @@ function show(target, animate = true) {
     l.children[0].inert = i !== turned;
     l.children[1].inert = !spread || i !== turned - 1;
   });
-  el.classList.toggle('is-closed-front', spread && turned === 0);
-  el.classList.toggle('is-closed-back', spread && turned === n);
   arrows[0].disabled = turned === 0;
   arrows[1].disabled = turned === maxTurned();
 }

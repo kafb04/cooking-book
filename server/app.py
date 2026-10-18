@@ -106,6 +106,15 @@ async def import_docx(files: list[UploadFile]):
     return {"created": created, "failed": failed}
 
 
+class AlwaysRevalidate(StaticFiles):
+    """Sem isso o celular continua usando JS/CSS velhos depois de uma atualização."""
+
+    def file_response(self, *args, **kwargs):
+        resp = super().file_response(*args, **kwargs)
+        resp.headers["Cache-Control"] = "no-cache"
+        return resp
+
+
 store.MEDIA.mkdir(parents=True, exist_ok=True)
-app.mount("/media", StaticFiles(directory=store.MEDIA), name="media")
-app.mount("/", StaticFiles(directory=WEB, html=True), name="web")
+app.mount("/media", StaticFiles(directory=store.MEDIA), name="media")  # nomes uuid: nunca mudam
+app.mount("/", AlwaysRevalidate(directory=WEB, html=True), name="web")

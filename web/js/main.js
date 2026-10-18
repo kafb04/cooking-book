@@ -31,7 +31,7 @@ document.getElementById('import').addEventListener('change', async e => {
   api.toast('Lendo as receitas...');
   try {
     const { created, failed } = await api.importDocx(files);
-    api.toast(`${created.length} receita(s) importada(s) ♥${failed.length ? ` · não li: ${failed.join(', ')}` : ''}`);
+    api.toast(`${created.length} receita(s) importada(s)${failed.length ? ` · não li: ${failed.join(', ')}` : ''}`);
     await refresh(created[0]?.id);
     if (created.length === 1) openEditor(recipes.find(r => r.id === created[0].id), categories());
   } catch (err) {
