@@ -69,7 +69,27 @@ def test_docx():
     assert img and img.startswith(b"\x89PNG")
 
 
+def test_auth():
+    import auth
+    auth.ITERATIONS = 1000  # só pra o teste ser rápido
+    assert not auth.has_password()
+    auth.set_password("abcd")
+    assert auth.try_unlock("errada") is None
+    token = auth.try_unlock("abcd")
+    assert auth.is_valid(token) and not auth.is_valid("inventado")
+    auth.end(token)
+    assert not auth.is_valid(token)
+    for _ in range(auth.MAX_FREE_TRIES):
+        auth.try_unlock("errada")
+    try:
+        auth.try_unlock("abcd")  # nem a certa passa durante o freio
+        raise AssertionError("deveria estar no freio")
+    except TimeoutError:
+        pass
+
+
 if __name__ == "__main__":
     test_store()
     test_docx()
+    test_auth()
     print("ok ♥")

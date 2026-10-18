@@ -6,6 +6,10 @@ async function call(method, url, body) {
     body: json ? JSON.stringify(body) : body,
     headers: json ? { 'content-type': 'application/json' } : undefined,
   });
+  if (res.status === 401) { // sessão acabou: recarrega e o cadeado aparece de novo
+    location.reload();
+    return new Promise(() => {});
+  }
   if (!res.ok) {
     const detail = (await res.json().catch(() => null))?.detail;
     throw new Error(typeof detail === 'string' ? detail : 'Algo deu errado. Tente de novo.');

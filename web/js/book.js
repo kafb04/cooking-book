@@ -114,14 +114,15 @@ function show(target, animate = true) {
 }
 
 export const go = key => key in anchors && show(turnedFor(anchors[key]));
-const turn = d => show(turned + d);
+const locked = () => document.body.classList.contains('is-locked');
+const turn = d => locked() || show(turned + d);
 
 arrows.forEach(b => b.addEventListener('click', () => turn(+b.dataset.turn)));
 SPREAD.addEventListener('change', () => layout());
 
 el.addEventListener('click', e => {
   const t = e.target.closest('[data-goto]');
-  if (!t || e.target.closest('[data-edit]')) return;
+  if (!t || e.target.closest('[data-edit]') || locked()) return;
   e.preventDefault();
   go(t.dataset.goto);
 });

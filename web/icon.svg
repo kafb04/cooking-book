@@ -1,1 +1,39 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#6b3d22"/><path fill="#c9a24a" d="M32 52s-17-10.3-22.4-21C6 23.2 10.4 13 19.4 13c5.4 0 9 3.1 12.6 8 3.6-4.9 7.2-8 12.6-8 9 0 13.4 10.2 9.8 18C49 41.7 32 52 32 52z"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="lea" cx="35%" cy="25%" r="85%"><stop offset="0" stop-color="#94603a"/><stop offset=".5" stop-color="#6b3d22"/><stop offset="1" stop-color="#2c170b"/></radialGradient>
+    <filter id="tex"><feTurbulence type="fractalNoise" baseFrequency=".11" numOctaves="4" seed="4"/><feDiffuseLighting lighting-color="#fff" surfaceScale="1.8"><feDistantLight azimuth="225" elevation="58"/></feDiffuseLighting></filter>
+    <filter id="emboss" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.4" result="b"/>
+      <feSpecularLighting in="b" surfaceScale="4" specularConstant=".75" specularExponent="18" lighting-color="#fff" result="s"><feDistantLight azimuth="235" elevation="42"/></feSpecularLighting>
+      <feComposite in="s" in2="SourceAlpha" operator="in" result="hl"/>
+      <feDropShadow in="SourceGraphic" dx="0" dy="1.6" stdDeviation="1.1" flood-opacity=".65" result="sh"/>
+      <feComposite in="hl" in2="sh" operator="arithmetic" k2=".5" k3="1"/>
+    </filter>
+  </defs>
+  <!-- couro com relevo -->
+  <rect width="512" height="512" fill="url(#lea)"/>
+  <rect width="512" height="512" filter="url(#tex)" style="mix-blend-mode:multiply"/>
+  <rect x="30" y="30" width="452" height="452" rx="80" fill="none" stroke="#d4c09a" stroke-width="5" stroke-dasharray="14 10" opacity=".5"/>
+  <!-- moldura dourada em arco -->
+  <rect x="78" y="62" width="356" height="388" rx="178" ry="96" fill="none" stroke="#c9a24a" stroke-width="7"/>
+  <rect x="93" y="77" width="326" height="358" rx="163" ry="86" fill="none" stroke="#c9a24a" stroke-width="2.5"/>
+  <!-- medalhão com o unicórnio alado -->
+  <g transform="translate(256 256) scale(2.25) translate(-60 -50)">
+    <ellipse cx="60" cy="50" rx="58" ry="48" fill="#2c170b" stroke="#c9a24a" stroke-width="2.6"/>
+    <ellipse cx="60" cy="50" rx="53" ry="43" fill="none" stroke="#c9a24a" stroke-width=".7"/>
+    <path d="M14 74l12-9 9 6 13-12 10 9 9-7 12 10 10-6 12 9M20 40l3-2 3 2M30 32l2-1.5 2 1.5M94 30l3-2 3 2M100 42l2-1.5 2 1.5" fill="none" stroke="#c9a24a" stroke-width=".7" opacity=".55"/>
+    <g filter="url(#emboss)" transform="translate(14 10) scale(.78)">
+      <path fill="#c9a24a" opacity=".7" d="M62 40C60 26 58 14 54 0c4 4 6 6 6 10 2 0 4 2 4 6 2 0 4 4 2 8 3 2 2 6 0 8z"/>
+      <g fill="#c9a24a">
+        <path d="M58 42C52 28 42 14 28 4c2 6 2 10 6 14-4 0-6 4-2 8-4 1-4 5 0 8-3 2-1 6 4 7-2 3 2 6 8 5 4 2 10 0 14-4z"/>
+        <path d="M38 58C26 54 18 64 14 74c-3 8 2 14-6 20 12-4 12-14 18-22 4-6 8-8 14-8z"/>
+        <path d="M62 40c-10 2-20 8-26 18-4 8 0 16 8 18 8 1 16-6 22-14 4-6 6-12 4-18z"/>
+        <path d="M60 42c2-10 6-20 14-27l2-3 2 2c4-2 8 1 11 6 2 3 2 5-1 6-3 0-6-1-9-2-3 6-5 14-7 22z"/>
+        <path d="M80 13L93 1 83 15z"/>
+        <path d="M72 16c-8 2-10 10-14 14 4 0 2 6-2 10 4 0 4 4 4 6l6-10z"/>
+      </g>
+      <path fill="none" stroke="#c9a24a" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" d="M66 52l13-6 4 11M64 56l11-2 1 10M46 70c-4 6-10 10-12 14l6 12M52 72c0 8-2 12-2 16l4 8"/>
+      <path fill="none" stroke="#2c170b" stroke-width="1.1" stroke-linecap="round" opacity=".6" d="M34 18c6 6 12 14 20 22M32 26c8 6 14 11 22 16M32 34c8 4 14 7 20 10M82 17.5h.1"/>
+    </g>
+  </g>
+</svg>

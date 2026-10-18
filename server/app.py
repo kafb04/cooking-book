@@ -1,11 +1,14 @@
 """API do livro + frontend estático. Rodar: uvicorn app:app --app-dir server"""
+import math
 from pathlib import Path
 from typing import Literal
 
-from fastapi import FastAPI, HTTPException, UploadFile
+from fastapi import FastAPI, HTTPException, Request, Response, UploadFile
+from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
+import auth
 import docx_import
 import store
 
@@ -49,7 +52,48 @@ def _or_404(fn, *args):
         raise HTTPException(404, "Receita não encontrada")
 
 
+class UnlockIn(BaseModel):
+    password: str = Field(min_length=4, max_length=128)
+
+
 app = FastAPI(title="Livro de Receitas")
+OPEN_PATHS = {"/api/session", "/api/unlock"}
+
+
+@app.middleware("http")
+async def require_unlocked(request: Request, call_next):
+    """Receitas e fotos só saem do servidor com o livro destrancado."""
+    path = request.url.path
+    if path.startswith(("/api/", "/media/")) and path not in OPEN_PATHS             and not auth.is_valid(request.cookies.get(auth.COOKIE)):
+        return JSONResponse({"detail": "Livro trancado"}, status_code=401)
+    return await call_next(request)
+
+
+@app.get("/api/session")
+def session(request: Request):
+    return {"unlocked": auth.is_valid(request.cookies.get(auth.COOKIE)), "setup": not auth.has_password()}
+
+
+@app.post("/api/unlock")
+def unlock(body: UnlockIn, response: Response):
+    if not auth.has_password():  # primeira vez: a senha digitada vira a senha do livro
+        auth.set_password(body.password)
+    try:
+        token = auth.try_unlock(body.password)
+    except TimeoutError:
+        raise HTTPException(429, f"Muitas tentativas. Espere {math.ceil(auth.wait_seconds())} s.")
+    if not token:
+        raise HTTPException(401, "Senha errada")
+    # cookie de sessão (sem validade): fechar o navegador tranca de novo
+    response.set_cookie(auth.COOKIE, token, httponly=True, samesite="strict")
+    return {"unlocked": True}
+
+
+@app.post("/api/lock")
+def lock(request: Request, response: Response):
+    auth.end(request.cookies.get(auth.COOKIE))
+    response.delete_cookie(auth.COOKIE)
+    return {"unlocked": False}
 
 
 @app.get("/api/recipes")
@@ -128,7 +172,9 @@ EXAMPLE = {
     "notes": "Receita de exemplo: edite ou apague quando quiser.\nFica ótimo com café passado na hora.",
 }
 if not store.FILE.exists():  # livro novo: começa com uma receita de exemplo em vez de vazio
-    store.save(EXAMPLE)
+    # foto: "Bolo de Fubá.jpg", Wilfredor, Wikimedia Commons, CC0 (domínio público)
+    photo = Path(__file__).with_name("example-bolo.jpg").read_bytes()
+    store.set_media(store.save(EXAMPLE)["id"], "photo", photo, "jpg")
 
 store.MEDIA.mkdir(parents=True, exist_ok=True)
 app.mount("/media", StaticFiles(directory=store.MEDIA), name="media")  # nomes uuid: nunca mudam

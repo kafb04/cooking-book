@@ -190,3 +190,39 @@ img { max-width: 100%; display: block; }
   pointer-events: none;
 }
 .toast.is-on { transform: translate(-50%, 0); visibility: visible; }
+
+/* ---------- Livro trancado ---------- */
+body.is-locked .hud__actions, body.is-locked .arrow { visibility: hidden; }
+body:not(.is-locked) .lock { display: none; }
+.lock {
+  position: fixed;
+  left: 50%;
+  bottom: calc(1.4rem + env(safe-area-inset-bottom));
+  translate: -50% 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  padding: .55rem .7rem .55rem 1.6rem;
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  background: var(--leather-tex), linear-gradient(var(--leather-light), var(--leather) 50%, var(--leather-dark));
+  background-blend-mode: multiply, normal;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--gold-light) 25%, transparent), 0 10px 26px var(--shadow), 0 0 22px var(--mote);
+}
+.lock__label { font: italic 1.15rem var(--font-title); color: var(--gold-light); }
+.lock__input {
+  width: 6.5em;
+  padding: .15em .2em;
+  border: 0;
+  border-bottom: 1px solid var(--gold);
+  background: transparent;
+  color: var(--gold-light);
+  font: 600 1.35rem var(--font-ui);
+  letter-spacing: .35em;
+  text-align: center;
+}
+.lock__input::placeholder { color: color-mix(in srgb, var(--gold-light) 40%, transparent); }
+.lock__input:focus { outline: none; border-bottom-color: var(--gold-light); }
+.lock.is-wrong { animation: shake .4s; }
+@keyframes shake { 20%, 60% { translate: calc(-50% - 8px) 0; } 40%, 80% { translate: calc(-50% + 8px) 0; } }

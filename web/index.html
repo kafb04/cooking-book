@@ -7,6 +7,9 @@
   <meta name="theme-color" content="#2c170b">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Receitas">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Homemade+Apple&family=IM+Fell+English:ital@0;1&family=UnifrakturMaguntia&display=swap">
@@ -36,6 +39,14 @@
       <feDropShadow in="SourceGraphic" dx="0" dy="1.6" stdDeviation="1.1" flood-opacity=".65" result="sh"/>
       <feComposite in="hl" in2="sh" operator="arithmetic" k2=".5" k3="1"/>
     </filter>
+    <!-- Cadeado de latão (a argola abre ao destrancar) -->
+    <symbol id="art-padlock" viewBox="0 0 60 84">
+      <path class="padlock__shackle" d="M17 40V25a13 13 0 0 1 26 0v15"/>
+      <rect class="padlock__body" x="5" y="38" width="50" height="42" rx="12"/>
+      <rect class="padlock__trim" x="10" y="43" width="40" height="32" rx="8"/>
+      <circle class="padlock__keyhole" cx="30" cy="55" r="4.5"/>
+      <path class="padlock__keyhole" d="M27.2 57h5.6l1.6 10h-8.8z"/>
+    </symbol>
     <!-- Medalhão da capa: unicórnio alado empinando -->
     <!-- Fases da lua: crescente, quarto, cheia, quarto, minguante -->
     <symbol id="art-moons" viewBox="0 0 100 12">
@@ -77,6 +88,8 @@
     <nav class="hud__actions">
       <button class="btn" type="button" data-action="new">Nova receita</button>
       <label class="btn btn--quiet">Importar .docx<input type="file" id="import" accept=".docx" multiple hidden></label>
+      <button class="btn btn--quiet" type="button" data-action="install">Instalar app</button>
+      <button class="btn btn--quiet" type="button" data-action="lock">Trancar</button>
     </nav>
   </header>
 
@@ -115,12 +128,35 @@
     </form>
   </dialog>
 
+  <!-- Plaquinha da senha (só aparece com o livro trancado) -->
+  <form class="lock" id="lock" autocomplete="on">
+    <label class="lock__label" for="lock-password">Senha</label>
+    <input class="lock__input" id="lock-password" name="password" type="password" inputmode="numeric"
+           autocomplete="current-password" minlength="4" maxlength="128" required placeholder="••••">
+    <button class="btn btn--small" type="submit">Abrir</button>
+  </form>
+
+  <dialog class="sheet sheet--small" id="install-help">
+    <form class="sheet__form" method="dialog">
+      <header class="sheet__bar">
+        <h2 class="sheet__title">Instalar no celular</h2>
+        <button class="link-btn sheet__close" aria-label="Fechar">✕</button>
+      </header>
+      <div class="sheet__body help">
+        <p><b>Android (Chrome):</b> menu <b>⋮</b> → <b>Adicionar à tela inicial</b> (ou <b>Instalar app</b>).</p>
+        <p><b>iPhone (Safari):</b> botão <b>Compartilhar</b> → <b>Adicionar à Tela de Início</b>.</p>
+        <p class="help__note">O ícone do livro aparece na tela do celular. Pela rede de casa ele abre como atalho;
+          o app completo (tela cheia e digital) precisa de um endereço HTTPS.</p>
+      </div>
+    </form>
+  </dialog>
+
   <output class="toast" id="toast"></output>
 
   <!-- ========== Páginas do livro (clonadas por js/pages.js) ========== -->
   <template id="tpl-cover">
     <article class="page page--cover leather" data-goto="toc" title="Abrir o livro">
-      <div class="clasp" aria-hidden="true"></div>
+      <div class="clasp" aria-hidden="true"><svg class="padlock" viewBox="0 0 60 84"><use href="#art-padlock"/></svg></div>
       <div class="cover__content">
         <svg class="moons" viewBox="0 0 100 12" aria-hidden="true"><use href="#art-moons"/></svg>
         <svg class="cover__unicorn" viewBox="0 0 148 128" aria-hidden="true"><use href="#art-unicorn"/></svg>
