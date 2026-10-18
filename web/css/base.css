@@ -59,7 +59,6 @@ body::after {
 button, input, textarea { font: inherit; color: inherit; }
 img { max-width: 100%; display: block; }
 .sprite { position: absolute; width: 0; height: 0; }
-.icon { width: 1em; height: 1em; vertical-align: -.12em; }
 [hidden] { display: none !important; }
 
 /* ---------- Barra superior ---------- */
@@ -79,66 +78,97 @@ img { max-width: 100%; display: block; }
 }
 .hud__actions { display: flex; gap: .6rem; flex-wrap: wrap; justify-content: flex-end; }
 
-/* ---------- Botões: etiqueta de couro com filete dourado ---------- */
+/* ---------- Botões élficos: pontas de folha, filete dourado e brilho que atravessa ---------- */
 .btn {
+  --tip: .85em;
+  --edge: var(--gold);
+  --fill: var(--leather-tex), linear-gradient(var(--leather-light), var(--leather) 45%, var(--leather-dark));
+  --fg: var(--gold-light);
+  --shine: color-mix(in srgb, var(--gold-light) 30%, transparent);
+  position: relative;
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: .4em;
-  padding: .4em 1.1em;
-  border: 1px solid var(--gold);
-  border-radius: var(--radius);
-  background: var(--leather-tex), linear-gradient(var(--leather), var(--leather-dark));
-  background-blend-mode: multiply, normal;
-  color: var(--gold-light);
+  padding: .45em calc(var(--tip) + .7em);
+  border: 0;
+  background: none;
+  color: var(--fg);
   font: 600 1.05rem var(--font-ui);
-  letter-spacing: .04em;
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--gold-light) 22%, transparent), 0 2px 6px var(--shadow);
+  font-variant: small-caps;
+  letter-spacing: .08em;
+  text-shadow: 0 1px 1px var(--shadow-soft);
+  filter: drop-shadow(0 2px 3px var(--shadow-soft));
   cursor: pointer;
   user-select: none;
-  transition: filter .2s, box-shadow .2s;
+  transition: filter .35s, color .35s;
 }
-.btn:hover { filter: brightness(1.15); }
-.btn:active { box-shadow: inset 0 2px 5px var(--shadow); }
+.btn::before, .btn::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  clip-path: polygon(var(--tip) 0, calc(100% - var(--tip)) 0, 100% 50%, calc(100% - var(--tip)) 100%, var(--tip) 100%, 0 50%);
+}
+.btn::before { inset: 0; background: var(--edge); }
+.btn::after {
+  inset: 1.5px;
+  background:
+    linear-gradient(100deg, transparent 35%, var(--shine) 50%, transparent 65%) -160% 0 / 220% 100% no-repeat,
+    var(--fill);
+  background-blend-mode: normal, multiply, normal;
+  transition: background-position .9s ease;
+}
+.btn:hover { filter: drop-shadow(0 0 7px var(--mote)) drop-shadow(0 2px 3px var(--shadow-soft)); color: var(--cream); }
+.btn:hover::after { background-position: 160% 0, 0 0, 0 0; }
+.btn:active::after { inset: 2.5px; }
 .btn:disabled { opacity: .6; cursor: progress; }
-.btn--quiet { background: transparent; border-color: color-mix(in srgb, var(--gold) 55%, transparent); box-shadow: none; }
-.btn--paper { background: var(--paper-shade); color: var(--ink); border-color: var(--ink-soft); box-shadow: 0 1px 2px var(--shadow-soft); }
-.btn--danger { color: var(--accent); border-color: var(--accent); }
-.btn--small { font-size: .92rem; padding: .25em .8em; }
-.btn[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.btn--quiet { --fill: color-mix(in srgb, var(--leather-dark) 55%, transparent); --edge: color-mix(in srgb, var(--gold) 70%, transparent); }
+.btn--paper { --edge: var(--ink-soft); --fill: var(--fibers), linear-gradient(var(--cream), var(--paper-shade)); --fg: var(--ink); --shine: color-mix(in srgb, var(--gold) 35%, transparent); text-shadow: none; }
+.btn--paper:hover { color: var(--accent-deep); }
+.btn--danger { --edge: var(--accent); --fg: var(--accent); }
+.btn--small { --tip: .7em; font-size: .92rem; padding: .3em calc(var(--tip) + .55em); }
+.btn[aria-pressed="true"] { --fill: linear-gradient(var(--ink-soft), var(--ink)); --fg: var(--paper); --edge: var(--gold-dark); }
 
 .link-btn {
   padding: .1em .3em;
   border: 0;
   background: none;
   color: var(--ink-soft);
-  font: 600 .85rem var(--font-ui);
-  letter-spacing: .06em;
+  font: italic 600 .9rem var(--font-ui);
+  letter-spacing: .04em;
   cursor: pointer;
+  transition: color .3s, text-shadow .3s;
 }
-.link-btn:hover { color: var(--accent); text-decoration: underline; }
-.btn:focus-visible, .arrow:focus-visible, .link-btn:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 3px; }
+.link-btn:hover { color: var(--accent); text-shadow: 0 0 6px var(--mote); }
+.btn:focus-visible, .arrow:focus-visible, .link-btn:focus-visible { outline: 1px dashed var(--gold-light); outline-offset: 4px; }
 
-/* ---------- Puxadores de latão (virar página) ---------- */
+/* ---------- Setas: folhas élficas de couro com nervura dourada ---------- */
 .arrow {
-  width: 3.2rem;
-  height: 3.2rem;
+  width: 4.4rem;
+  height: 3.3rem;
   flex: none;
-  display: grid;
-  place-items: center;
-  border: 2px solid var(--gold-dark);
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, var(--gold-light), var(--gold) 45%, var(--gold-dark));
-  color: var(--leather-dark);
-  font-size: 1.4rem;
-  box-shadow: inset 0 -2px 3px var(--shadow-soft), 0 3px 8px var(--shadow);
+  padding: 0;
+  border: 0;
+  background: none;
   cursor: pointer;
-  transition: filter .2s, opacity .3s;
+  filter: drop-shadow(0 3px 4px var(--shadow));
+  transition: filter .4s, opacity .3s, transform .2s;
 }
-.arrow--prev .icon { transform: scaleX(-1); }
-.arrow:hover { filter: brightness(1.1); }
-.arrow:active { box-shadow: inset 0 2px 5px var(--shadow); }
+.arrow svg { width: 100%; height: 100%; overflow: visible; }
+.arrow--prev svg { transform: scaleX(-1); }
+.leaf-btn__blade { fill: url(#g-leather); stroke: url(#g-gold); stroke-width: 1.6; }
+.leaf-btn__vein { fill: none; stroke: var(--gold); stroke-width: .9; stroke-linecap: round; opacity: .7; }
+.leaf-btn__stem { fill: none; stroke: url(#g-gold); stroke-width: 1.6; stroke-linecap: round; }
+.leaf-btn__chevron { fill: none; stroke: var(--gold-light); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.arrow:hover { filter: drop-shadow(0 0 8px var(--mote)) drop-shadow(0 3px 4px var(--shadow)); animation: breeze 1.6s ease-in-out infinite; }
+.arrow:active { transform: scale(.94); }
 .arrow:disabled { opacity: .25; pointer-events: none; }
+@keyframes breeze {
+  0%, 100% { rotate: 0deg; }
+  30% { rotate: -4deg; }
+  70% { rotate: 3deg; }
+}
 
 /* ---------- Aviso (tira de papel) ---------- */
 .toast {

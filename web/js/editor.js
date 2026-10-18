@@ -2,7 +2,7 @@
 import * as api from './api.js';
 import { inkPad } from './ink.js';
 
-const SECTIONS = { ingredients: 'Ingredientes', steps: 'Como fazer', notes: 'Observações' };
+const SECTIONS = { ingredients: 'Ingredientes', steps: 'Modo de preparo', notes: 'Observações' };
 const MEDIA = id => `/media/${id}`;
 
 const dlg = document.getElementById('editor');
