@@ -6,17 +6,55 @@ body {
   color: var(--cream);
   background-color: var(--wood-dark);
   background-image:
-    radial-gradient(ellipse 75% 65% at 30% 18%, var(--lamp), transparent 70%),
     radial-gradient(ellipse at 50% 45%, transparent 35%, var(--shadow) 100%),
     var(--wood-tex),
     linear-gradient(100deg, var(--wood), var(--wood-dark) 40%, var(--wood) 65%, var(--wood-dark));
-  background-size: auto, auto, 2400px 900px, auto;
-  background-blend-mode: normal, normal, multiply, normal;
+  background-size: auto, 2400px 900px, auto;
+  background-blend-mode: normal, multiply, normal;
   background-attachment: fixed;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
+}
+/* Luz de vela do abajur (oscila) e poeira dourada flutuando no feixe */
+body::before, body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+body::before {
+  background: radial-gradient(ellipse 75% 65% at 30% 18%, var(--lamp), transparent 70%);
+  animation: candle 7s ease-in-out infinite;
+}
+body::after {
+  inset: -5%;
+  background-image:
+    radial-gradient(circle at 14% 22%, var(--mote) 0 1px, transparent 2.5px),
+    radial-gradient(circle at 22% 41%, var(--mote) 0 1.4px, transparent 3px),
+    radial-gradient(circle at 31% 15%, var(--mote) 0 .8px, transparent 2px),
+    radial-gradient(circle at 38% 33%, var(--mote) 0 1.2px, transparent 3px),
+    radial-gradient(circle at 9% 48%, var(--mote) 0 .9px, transparent 2px),
+    radial-gradient(circle at 45% 12%, var(--mote) 0 1px, transparent 2.5px),
+    radial-gradient(circle at 27% 58%, var(--mote) 0 .8px, transparent 2px),
+    radial-gradient(circle at 52% 27%, var(--mote) 0 1.1px, transparent 2.5px),
+    radial-gradient(circle at 18% 70%, var(--mote) 0 .7px, transparent 2px),
+    radial-gradient(circle at 60% 40%, var(--mote) 0 .9px, transparent 2px);
+  animation: motes 26s ease-in-out infinite alternate, twinkle 5s ease-in-out infinite;
+}
+@keyframes candle {
+  0%, 100% { opacity: 1; }
+  30% { opacity: .9; }
+  33% { opacity: .97; }
+  61% { opacity: .86; }
+  64% { opacity: .95; }
+}
+@keyframes motes { to { transform: translate(-2.5%, -4%); } }
+@keyframes twinkle { 50% { opacity: .45; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; }
 }
 button, input, textarea { font: inherit; color: inherit; }
 img { max-width: 100%; display: block; }

@@ -9,7 +9,7 @@
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Homemade+Apple&family=IM+Fell+English:ital@0;1&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Homemade+Apple&family=IM+Fell+English:ital@0;1&family=UnifrakturMaguntia&display=swap">
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/book.css">
@@ -29,7 +29,22 @@
       <feComposite in="hl" in2="sh" operator="arithmetic" k2=".5" k3="1"/>
     </filter>
     <!-- Medalhão da capa: unicórnio alado empinando -->
-    <symbol id="art-unicorn" viewBox="0 0 120 100">
+    <!-- Fases da lua: crescente, quarto, cheia, quarto, minguante -->
+    <symbol id="art-moons" viewBox="0 0 100 12">
+      <g class="moons__disc"><circle cx="14" cy="6" r="4"/><circle cx="32" cy="6" r="4"/><circle cx="68" cy="6" r="4"/><circle cx="86" cy="6" r="4"/></g>
+      <g class="moons__lit">
+        <path d="M14 2A4 4 0 0 1 14 10 2.4 4 0 0 0 14 2Z"/><path d="M32 2A4 4 0 0 1 32 10Z"/>
+        <circle cx="50" cy="6" r="5"/>
+        <path d="M68 2A4 4 0 0 0 68 10Z"/><path d="M86 2A4 4 0 0 0 86 10 2.4 4 0 0 1 86 2Z"/>
+        <circle cx="23" cy="6" r=".7"/><circle cx="41" cy="6" r=".7"/><circle cx="59" cy="6" r=".7"/><circle cx="77" cy="6" r=".7"/>
+      </g>
+    </symbol>
+    <symbol id="art-unicorn" viewBox="-14 -14 148 128">
+      <!-- anel de símbolos astrológicos em volta do medalhão -->
+      <ellipse class="unicorn__band" cx="60" cy="50" rx="72" ry="62"/>
+      <ellipse class="unicorn__band" cx="60" cy="50" rx="61" ry="51"/>
+      <path id="unicorn-ring" d="M60 -7.5a66.5 56.5 0 1 1-.01 0" fill="none"/>
+      <text class="unicorn__runes"><textPath href="#unicorn-ring" textLength="384" lengthAdjust="spacing">☉ ✶ ☽ ✶ ♃ ✶ ♄ ✶ ☿ ✶ ♀ ✶ ♂ ✶ ☉ ✶ ☽ ✶ ♃ ✶ ♄ ✶ ☿ ✶ ♀ ✶ ♂ ✶</textPath></text>
       <ellipse class="unicorn__plate" cx="60" cy="50" rx="58" ry="48"/>
       <ellipse class="unicorn__ring" cx="60" cy="50" rx="53" ry="43"/>
       <path class="unicorn__scene" d="M14 74l12-9 9 6 13-12 10 9 9-7 12 10 10-6 12 9M20 40l3-2 3 2M30 32l2-1.5 2 1.5M94 30l3-2 3 2M100 42l2-1.5 2 1.5"/>
@@ -99,7 +114,8 @@
     <article class="page page--cover leather" data-goto="toc" title="Abrir o livro">
       <div class="clasp" aria-hidden="true"></div>
       <div class="cover__content">
-        <svg class="cover__unicorn" viewBox="0 0 120 100" aria-hidden="true"><use href="#art-unicorn"/></svg>
+        <svg class="moons" viewBox="0 0 100 12" aria-hidden="true"><use href="#art-moons"/></svg>
+        <svg class="cover__unicorn" viewBox="0 0 148 128" aria-hidden="true"><use href="#art-unicorn"/></svg>
         <p class="cover__pre">Livro de</p>
         <h2 class="cover__title">Receitas</h2>
         <p class="cover__sub">da família</p>
@@ -110,7 +126,7 @@
 
   <template id="tpl-endpaper">
     <article class="page page--endpaper">
-      <div class="bookplate"><p class="bookplate__head">Ex Libris</p><p class="bookplate__text"></p><span class="bookplate__line"></span></div>
+      <div class="bookplate"><svg class="moons" viewBox="0 0 100 12" aria-hidden="true"><use href="#art-moons"/></svg><p class="bookplate__head">Ex Libris</p><p class="bookplate__text"></p><span class="bookplate__line"></span></div>
     </article>
   </template>
 
@@ -140,7 +156,10 @@
 
   <template id="tpl-back">
     <article class="page page--back leather" data-goto="start" title="Voltar pra capa">
-      <div class="cover__content cover__content--back"><p class="cover__ornament" aria-hidden="true">❦</p></div>
+      <div class="cover__content cover__content--back">
+        <svg class="moons" viewBox="0 0 100 12" aria-hidden="true"><use href="#art-moons"/></svg>
+        <p class="cover__ornament" aria-hidden="true">❦</p>
+      </div>
     </article>
   </template>
 

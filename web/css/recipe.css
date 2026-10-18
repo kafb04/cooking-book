@@ -103,3 +103,26 @@
 .note.is-empty { display: none; }
 .note__label { margin: 0 0 .5em; font: italic clamp(.95rem, 4.8cqw, 1.4rem)/1.4 var(--font-title); color: var(--sage-deep); }
 .note__body { overflow-y: auto; min-height: 0; scrollbar-width: thin; scrollbar-color: var(--paper-edge) transparent; }
+
+/* ---------- Toques de grimório ---------- */
+.recipe__title { position: relative; }
+.recipe__title::after { /* estrela no meio do filete dourado */
+  content: "✶";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  translate: -50% 52%;
+  padding: 0 .35em;
+  font: .45em/1 var(--font-title);
+  color: var(--gold-dark);
+  background: var(--paper);
+}
+.recipe__label::before, .note__label::before { content: "☽ "; color: var(--gold-dark); font-size: .8em; }
+.recipe__steps p:first-child::first-letter { /* capitular iluminada */
+  float: left;
+  margin: .05em .12em 0 0;
+  font: 3.1em/.85 "UnifrakturMaguntia", var(--font-title);
+  color: var(--accent);
+  -webkit-text-stroke: .6px var(--gold-dark);
+  text-shadow: 1px 1px 0 var(--gold);
+}

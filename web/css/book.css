@@ -109,6 +109,7 @@
     radial-gradient(ellipse at 50% 50%, transparent 55%, var(--paper-edge) 100%),
     var(--fibers);
   box-shadow: var(--pile);
+  isolation: isolate;
 }
 .leaf__face--back .page {
   --s: var(--ls);
@@ -136,7 +137,19 @@
   font: 600 .8rem var(--font-ui);
   color: var(--ink-soft);
 }
-.page__num::before, .page__num::after { content: " — "; }
+.page__num::before, .page__num::after { content: " ✶ "; color: var(--gold-dark); }
+/* Marca-d'água de grimório: selo no centro e filigranas nos cantos, quase apagados */
+.page:is(.page--recipe, .page--toc, .page--notes, .page--plain)::before {
+  content: "";
+  position: absolute;
+  inset: 3cqw;
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--ink);
+  opacity: .09;
+  -webkit-mask: var(--sigil) center / 70cqw no-repeat, var(--corner-tl) top left / 12cqw no-repeat, var(--corner-tr) top right / 12cqw no-repeat, var(--corner-bl) bottom left / 12cqw no-repeat, var(--corner-br) bottom right / 12cqw no-repeat;
+  mask: var(--sigil) center / 70cqw no-repeat, var(--corner-tl) top left / 12cqw no-repeat, var(--corner-tr) top right / 12cqw no-repeat, var(--corner-bl) bottom left / 12cqw no-repeat, var(--corner-br) bottom right / 12cqw no-repeat;
+}
 .leaf__face--back .page__num { right: auto; left: 6cqw; }
 
 /* Pauta de caderno: as linhas acompanham o texto mesmo rolando */
@@ -154,10 +167,12 @@
   align-self: center;
   margin: 0 0 .3em;
   padding: 0 .3em .1em;
-  font: italic clamp(1.2rem, 6.5cqw, 2.2rem)/1.4 var(--font-title);
+  font: clamp(1.3rem, 7cqw, 2.4rem)/1.4 "UnifrakturMaguntia", var(--font-title);
   color: var(--accent);
   border-bottom: 3px double var(--accent);
 }
+.heading::before { content: "☙ "; color: var(--gold-dark); font: .7em var(--font-title); }
+.heading::after { content: " ❧"; color: var(--gold-dark); font: .7em var(--font-title); }
 
 /* ---------- Capa dura de couro, antiga e pesada ---------- */
 .page.leather {
@@ -225,12 +240,31 @@
   outline: 1px solid var(--gold);
   outline-offset: 7px;
 }
+.cover__content::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  pointer-events: none;
+  background-color: var(--gold);
+  -webkit-mask: var(--corner-tl) top left / 9cqw no-repeat, var(--corner-tr) top right / 9cqw no-repeat, var(--corner-bl) bottom left / 9cqw no-repeat, var(--corner-br) bottom right / 9cqw no-repeat;
+  mask: var(--corner-tl) top left / 9cqw no-repeat, var(--corner-tr) top right / 9cqw no-repeat, var(--corner-bl) bottom left / 9cqw no-repeat, var(--corner-br) bottom right / 9cqw no-repeat;
+}
+.moons { display: block; width: 44cqw; margin: 0 auto .5em; overflow: visible; }
+.moons__disc { fill: none; stroke: var(--gold); stroke-width: .5; }
+.moons__lit { fill: var(--gold); }
 .cover__content--back { margin: 0 8cqw 0 0; padding: 1.4em; align-self: center; }
 .cover__unicorn {
   display: block;
-  width: 58cqw;
-  margin: 0 auto .2em;
+  width: 62cqw;
+  margin: 0 auto .3em;
+  overflow: visible;
   filter: drop-shadow(0 3px 2px var(--leather-dark)) drop-shadow(0 0 1px var(--leather-dark));
+  animation: aura 6s ease-in-out infinite;
+}
+.unicorn__band { fill: none; stroke: var(--gold); stroke-width: .6; }
+.unicorn__runes { fill: var(--gold); font: 6.5px "Segoe UI Symbol", "Noto Sans Symbols 2", "Noto Sans Symbols", serif; }
+@keyframes aura {
+  50% { filter: drop-shadow(0 3px 2px var(--leather-dark)) drop-shadow(0 0 1px var(--leather-dark)) drop-shadow(0 0 9px var(--mote)); }
 }
 .unicorn__plate { fill: var(--leather-dark); stroke: var(--gold); stroke-width: 2.6; }
 .unicorn__ring { fill: none; stroke: var(--gold); stroke-width: .7; }
@@ -250,6 +284,10 @@
   background-clip: text;
   color: transparent;
   filter: drop-shadow(0 -1px 0 var(--leather-dark)) drop-shadow(0 2px 1px var(--leather-dark));
+  animation: aura-title 6s ease-in-out infinite;
+}
+@keyframes aura-title {
+  50% { filter: drop-shadow(0 -1px 0 var(--leather-dark)) drop-shadow(0 2px 1px var(--leather-dark)) drop-shadow(0 0 10px var(--mote)); }
 }
 .cover__sub { margin: 0; font: italic clamp(.9rem, 5cqw, 1.6rem) var(--font-title); color: var(--paper-edge); }
 .cover__ornament { margin: .2em 0 0; font-size: clamp(1.3rem, 7cqw, 2.4rem); line-height: 1; color: var(--gold); text-shadow: 0 1px 0 var(--leather-dark); }
@@ -298,6 +336,9 @@
   font: italic 1.1em var(--font-title);
 }
 .bookplate:has(.bookplate__text:empty) { display: none; }
+.bookplate .moons { width: 60%; margin-bottom: .2em; }
+.bookplate .moons__disc { stroke: var(--ink-soft); }
+.bookplate .moons__lit { fill: var(--ink-soft); }
 .bookplate__head { margin: .4em 0 .2em; font-size: 1.4em; letter-spacing: .08em; color: var(--accent); }
 .bookplate__text { margin: 0 0 1em; }
 .bookplate__line { display: block; border-bottom: 1px solid var(--ink-soft); height: 1.4em; margin: 0 .6em; }
